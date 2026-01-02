@@ -1,3 +1,70 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* MINIMAL BRUTALIST Design System */
+
+@layer utilities {
+  /* Hard shadow utilities */
+  .shadow-brutal {
+    box-shadow: 4px 4px 0px 0px #000000;
+  }
+
+  .shadow-brutal-sm {
+    box-shadow: 2px 2px 0px 0px #000000;
+  }
+
+  .shadow-brutal-lg {
+    box-shadow: 6px 6px 0px 0px #000000;
+  }
+
+  .shadow-brutal-accent {
+    box-shadow: 4px 4px 0px 0px #FACC15;
+  }
+
+  .shadow-brutal-white {
+    box-shadow: 4px 4px 0px 0px #FFFFFF;
+  }
+
+  /* Border utilities */
+  .border-brutal {
+    border-width: 3px;
+    border-color: #000000;
+    border-style: solid;
+  }
+
+  .border-brutal-accent {
+    border-width: 3px;
+    border-color: #FACC15;
+    border-style: solid;
+  }
+
+  /* Typography utilities */
+  .text-brutal-display {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+  }
+
+  .text-brutal-heading {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+  }
+
+  .text-brutal-subheading {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .text-brutal-caption {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+}
