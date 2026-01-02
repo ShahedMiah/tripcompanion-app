@@ -1,7 +1,6 @@
-import { View, Text, Image, Pressable, Dimensions } from 'react-native';
+import { View, Text, Pressable, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '@/components/ui';
 import * as Haptics from 'expo-haptics';
@@ -12,103 +11,236 @@ export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
-    <View className="flex-1 bg-slate-900">
-      {/* Background Image with Gradient Overlay */}
-      <Image
-        source={{ uri: 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200' }}
-        className="absolute inset-0 w-full h-full"
-        resizeMode="cover"
-      />
-      <LinearGradient
-        colors={['transparent', 'rgba(15, 23, 42, 0.4)', 'rgba(15, 23, 42, 0.95)']}
-        locations={[0, 0.4, 0.75]}
-        className="absolute inset-0"
-      />
-
-      <SafeAreaView className="flex-1 justify-end">
-        {/* Logo & Brand */}
-        <View className="px-8 mb-4">
-          <View className="flex-row items-center mb-4">
-            <View className="w-12 h-12 bg-primary-500 rounded-2xl items-center justify-center mr-3">
-              <Ionicons name="compass" size={28} color="white" />
-            </View>
-            <Text className="text-3xl font-bold text-white tracking-tight">
-              Wayfare
-            </Text>
+    <View className="flex-1 bg-white">
+      <SafeAreaView className="flex-1">
+        {/* Header - Logo */}
+        <View className="px-6 pt-8">
+          <View
+            style={{
+              width: 56,
+              height: 56,
+              backgroundColor: '#000000',
+              borderWidth: 3,
+              borderColor: '#000000',
+              alignItems: 'center',
+              justifyContent: 'center',
+              shadowColor: '#000000',
+              shadowOffset: { width: 4, height: 4 },
+              shadowOpacity: 1,
+              shadowRadius: 0,
+              elevation: 4,
+            }}
+          >
+            <Ionicons name="compass" size={28} color="#FFFFFF" />
           </View>
-
-          {/* Tagline */}
-          <Text className="text-4xl font-bold text-white leading-tight mb-3">
-            Travel planning,{'\n'}
-            <Text className="text-primary-400">reimagined.</Text>
-          </Text>
-          <Text className="text-lg text-slate-300 leading-relaxed">
-            AI-powered itineraries, group expense tracking, and seamless sharing — all in one place.
-          </Text>
         </View>
 
-        {/* Feature Pills */}
-        <View className="flex-row flex-wrap px-8 mb-8">
-          {['AI Itineraries', 'Split Expenses', 'Group Trips', 'Offline Access'].map((feature) => (
-            <View
-              key={feature}
-              className="bg-white/10 rounded-full px-4 py-2 mr-2 mb-2 border border-white/20"
-            >
-              <Text className="text-white text-sm font-medium">{feature}</Text>
-            </View>
-          ))}
+        {/* Main Content */}
+        <View className="flex-1 px-6 pt-12">
+          {/* Display Typography - Raw, bold */}
+          <Text
+            style={{
+              fontSize: 56,
+              fontWeight: '900',
+              color: '#000000',
+              letterSpacing: -2,
+              textTransform: 'uppercase',
+              lineHeight: 56,
+            }}
+          >
+            WAYFARE
+          </Text>
+
+          {/* Yellow accent underline */}
+          <View
+            style={{
+              width: 120,
+              height: 8,
+              backgroundColor: '#FACC15',
+              marginTop: 8,
+              marginBottom: 24,
+            }}
+          />
+
+          {/* Tagline - Direct, honest */}
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '700',
+              color: '#000000',
+              lineHeight: 32,
+              marginBottom: 24,
+            }}
+          >
+            TRAVEL PLANNING.{'\n'}
+            NO BULLSHIT.
+          </Text>
+
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '500',
+              color: '#737373',
+              lineHeight: 24,
+              maxWidth: 300,
+            }}
+          >
+            AI itineraries. Split expenses. Group coordination. All in one raw, honest app.
+          </Text>
+
+          {/* Feature List - Brutalist markers */}
+          <View style={{ marginTop: 32 }}>
+            {[
+              'AI-POWERED ITINERARIES',
+              'EXPENSE TRACKING',
+              'GROUP TRIPS',
+              'OFFLINE ACCESS',
+            ].map((feature, index) => (
+              <View
+                key={feature}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 12,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: '900',
+                    color: '#FACC15',
+                    marginRight: 12,
+                  }}
+                >
+                  +
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '700',
+                    color: '#000000',
+                    letterSpacing: 1,
+                  }}
+                >
+                  {feature}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
 
-        {/* Action Buttons */}
-        <View className="px-8 pb-4">
+        {/* Bottom Actions */}
+        <View className="px-6 pb-6">
+          {/* Primary CTA */}
           <Button
-            title="Get Started"
+            title="GET STARTED"
             onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
               router.push('/(auth)/register');
             }}
+            variant="primary"
             size="lg"
             fullWidth
           />
 
+          {/* Secondary CTA */}
           <Pressable
             onPress={() => router.push('/(auth)/login')}
-            className="mt-4 py-3"
+            style={{ marginTop: 16, paddingVertical: 12 }}
           >
-            <Text className="text-center text-slate-300 text-base">
-              Already have an account?{' '}
-              <Text className="text-primary-400 font-semibold">Sign in</Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: '#000000',
+                fontSize: 14,
+                fontWeight: '700',
+                letterSpacing: 0.5,
+              }}
+            >
+              ALREADY HAVE AN ACCOUNT?{' '}
+              <Text style={{ textDecorationLine: 'underline' }}>SIGN IN</Text>
             </Text>
           </Pressable>
-        </View>
 
-        {/* Social Login */}
-        <View className="px-8 pb-8">
-          <View className="flex-row items-center mb-6">
-            <View className="flex-1 h-px bg-slate-700" />
-            <Text className="text-slate-500 px-4 text-sm">or continue with</Text>
-            <View className="flex-1 h-px bg-slate-700" />
+          {/* Divider */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginVertical: 24,
+            }}
+          >
+            <View style={{ flex: 1, height: 3, backgroundColor: '#000000' }} />
+            <Text
+              style={{
+                paddingHorizontal: 16,
+                color: '#000000',
+                fontSize: 12,
+                fontWeight: '700',
+                letterSpacing: 1,
+              }}
+            >
+              OR
+            </Text>
+            <View style={{ flex: 1, height: 3, backgroundColor: '#000000' }} />
           </View>
 
-          <View className="flex-row justify-center space-x-4">
+          {/* Social Login - Brutalist boxes */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
+            {/* Google */}
             <Pressable
               onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                // Mock login for demo
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.replace('/(tabs)');
               }}
-              className="w-14 h-14 bg-white rounded-2xl items-center justify-center"
+              style={({ pressed }) => ({
+                width: 64,
+                height: 64,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 3,
+                borderColor: '#000000',
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000000',
+                shadowOffset: pressed
+                  ? { width: 2, height: 2 }
+                  : { width: 4, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 0,
+                transform: pressed
+                  ? [{ translateX: 2 }, { translateY: 2 }]
+                  : [{ translateX: 0 }, { translateY: 0 }],
+              })}
             >
-              <Ionicons name="logo-google" size={24} color="#4285F4" />
+              <Ionicons name="logo-google" size={28} color="#000000" />
             </Pressable>
+
+            {/* Apple */}
             <Pressable
               onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.replace('/(tabs)');
               }}
-              className="w-14 h-14 bg-white rounded-2xl items-center justify-center"
+              style={({ pressed }) => ({
+                width: 64,
+                height: 64,
+                backgroundColor: '#000000',
+                borderWidth: 3,
+                borderColor: '#000000',
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#FACC15',
+                shadowOffset: pressed
+                  ? { width: 2, height: 2 }
+                  : { width: 4, height: 4 },
+                shadowOpacity: 1,
+                shadowRadius: 0,
+                transform: pressed
+                  ? [{ translateX: 2 }, { translateY: 2 }]
+                  : [{ translateX: 0 }, { translateY: 0 }],
+              })}
             >
-              <Ionicons name="logo-apple" size={24} color="#000" />
+              <Ionicons name="logo-apple" size={28} color="#FFFFFF" />
             </Pressable>
           </View>
         </View>

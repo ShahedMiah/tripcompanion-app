@@ -1,3 +1,228 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* WAYFARE Glassmorphism Design System
+   Translucent, layered, ethereal aesthetics
+   Inspired by: iOS Control Centre, Stripe Dashboard, Modern Fintech */
+
+@layer base {
+  :root {
+    --background: #0A1628;
+    --foreground: #FFFFFF;
+    --primary: #1E3A5F;
+    --violet: #7C3AED;
+    --aurora: #06B6D4;
+    --glass-white: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@layer components {
+  /* Glass Card Styles */
+  .card-glass {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .card-glass-dark {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .card-glass-light {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .card-glass-violet {
+    background-color: rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .card-glass-aurora {
+    background-color: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Glass Button Styles */
+  .btn-glass {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  .btn-glass:active {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: scale(0.98);
+  }
+
+  .btn-glass-solid {
+    background: linear-gradient(135deg, #7C3AED, #1E3A5F);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  .btn-glass-violet {
+    background-color: rgba(124, 58, 237, 0.3);
+    border: 1px solid rgba(124, 58, 237, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  .btn-glass-aurora {
+    background: linear-gradient(135deg, #06B6D4, #7C3AED);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  /* Glass Typography */
+  .text-display {
+    font-size: 48px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #FFFFFF;
+  }
+
+  .text-headline {
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #FFFFFF;
+  }
+
+  .text-label {
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Glass Badge */
+  .badge-glass {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .badge-glass-violet {
+    background-color: rgba(124, 58, 237, 0.25);
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .badge-glass-success {
+    background-color: rgba(16, 185, 129, 0.25);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  .badge-glass-warning {
+    background-color: rgba(245, 158, 11, 0.25);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+}
+
+@layer utilities {
+  /* Glass Surfaces */
+  .bg-glass { background-color: rgba(255, 255, 255, 0.1); }
+  .bg-glass-md { background-color: rgba(255, 255, 255, 0.15); }
+  .bg-glass-lg { background-color: rgba(255, 255, 255, 0.25); }
+  .bg-glass-dark { background-color: rgba(0, 0, 0, 0.2); }
+  .bg-glass-violet { background-color: rgba(124, 58, 237, 0.2); }
+  .bg-glass-aurora { background-color: rgba(6, 182, 212, 0.2); }
+
+  /* Glass Borders */
+  .border-glass { border-color: rgba(255, 255, 255, 0.2); }
+  .border-glass-light { border-color: rgba(255, 255, 255, 0.1); }
+  .border-glass-strong { border-color: rgba(255, 255, 255, 0.3); }
+  .border-glass-violet { border-color: rgba(124, 58, 237, 0.3); }
+  .border-glass-aurora { border-color: rgba(6, 182, 212, 0.3); }
+
+  /* Glass Shadows */
+  .shadow-glass { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+  .shadow-glass-sm { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); }
+  .shadow-glass-lg { box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4); }
+  .shadow-glass-inset { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1); }
+
+  /* Glow Effects */
+  .glow-violet { box-shadow: 0 0 40px rgba(124, 58, 237, 0.4); }
+  .glow-aurora { box-shadow: 0 0 40px rgba(6, 182, 212, 0.4); }
+  .glow-primary { box-shadow: 0 0 40px rgba(30, 58, 95, 0.4); }
+
+  /* Text Colours */
+  .text-glass-primary { color: #FFFFFF; }
+  .text-glass-secondary { color: rgba(255, 255, 255, 0.7); }
+  .text-glass-tertiary { color: rgba(255, 255, 255, 0.5); }
+  .text-glass-muted { color: rgba(255, 255, 255, 0.3); }
+
+  /* Background Gradients */
+  .bg-gradient-aurora {
+    background: linear-gradient(135deg, #1E3A5F 0%, #7C3AED 50%, #06B6D4 100%);
+  }
+  .bg-gradient-violet-blue {
+    background: linear-gradient(135deg, #7C3AED 0%, #1E3A5F 100%);
+  }
+  .bg-gradient-cyan-violet {
+    background: linear-gradient(135deg, #06B6D4 0%, #7C3AED 100%);
+  }
+
+  /* Backdrop Blur */
+  .blur-glass { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .blur-glass-sm { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .blur-glass-lg { backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); }
+
+  /* Background Opacity */
+  .bg-opacity-5 { background-color: rgba(255, 255, 255, 0.05); }
+  .bg-opacity-10 { background-color: rgba(255, 255, 255, 0.1); }
+  .bg-opacity-15 { background-color: rgba(255, 255, 255, 0.15); }
+  .bg-opacity-20 { background-color: rgba(255, 255, 255, 0.2); }
+  .bg-opacity-25 { background-color: rgba(255, 255, 255, 0.25); }
+
+  /* Press States */
+  .press-glass:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  /* Dividers */
+  .divider-glass {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  }
+}
