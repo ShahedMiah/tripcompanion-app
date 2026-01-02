@@ -1,1 +1,0 @@
-# tripcompanion-app
