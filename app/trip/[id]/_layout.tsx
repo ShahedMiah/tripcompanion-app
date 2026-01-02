@@ -5,6 +5,37 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getTripById } from '@/lib/mock-data';
 import { getFlagEmoji } from '@/lib/utils';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
+
+/**
+ * WAYFARE Trip Detail Layout - Bento Editorial Design
+ *
+ * Warm, editorial aesthetic with terracotta accents.
+ * Generous spacing, soft shadows, refined typography.
+ */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
 
 export default function TripLayout() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -14,50 +45,77 @@ export default function TripLayout() {
 
   if (!trip) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-slate-500">Trip not found</Text>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.cream }}>
+        <Ionicons name="compass-outline" size={48} color={COLORS.stone[300]} />
+        <Text style={{ color: COLORS.stone[500], fontSize: 16, marginTop: 16, fontWeight: '500' }}>
+          Trip not found
+        </Text>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-slate-50">
+    <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
       {/* Header with Cover Image */}
       <View style={{ paddingTop: insets.top }}>
         <Image
           source={{ uri: trip.coverImage || 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800' }}
-          className="absolute inset-0 w-full h-full"
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' }}
           resizeMode="cover"
         />
         <LinearGradient
-          colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.6)']}
-          className="absolute inset-0"
+          colors={['rgba(26, 23, 20, 0.2)', 'rgba(26, 23, 20, 0.7)']}
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
         />
 
         {/* Navigation */}
-        <View className="px-4 py-3 flex-row items-center justify-between">
+        <View style={{ paddingHorizontal: 20, paddingVertical: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Pressable
-            onPress={() => router.back()}
-            className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full items-center justify-center"
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.back();
+            }}
+            style={({ pressed }) => ({
+              width: 44,
+              height: 44,
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              borderRadius: 22,
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: pressed ? 0.8 : 1,
+            })}
           >
             <Ionicons name="arrow-back" size={22} color="white" />
           </Pressable>
           <Pressable
-            onPress={() => router.push(`/trip/${id}/settings`)}
-            className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full items-center justify-center"
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.push(`/trip/${id}/settings`);
+            }}
+            style={({ pressed }) => ({
+              width: 44,
+              height: 44,
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              borderRadius: 22,
+              alignItems: 'center',
+              justifyContent: 'center',
+              opacity: pressed ? 0.8 : 1,
+            })}
           >
             <Ionicons name="ellipsis-horizontal" size={22} color="white" />
           </Pressable>
         </View>
 
         {/* Trip Info */}
-        <View className="px-5 pb-5">
-          <Text className="text-white text-2xl font-bold">{trip.name}</Text>
-          <View className="flex-row items-center mt-1">
-            <Text className="text-lg mr-1.5">
+        <View style={{ paddingHorizontal: 24, paddingBottom: 24 }}>
+          <Text style={{ color: '#FFFFFF', fontSize: 28, fontWeight: '700', letterSpacing: -0.5 }}>
+            {trip.name}
+          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
+            <Text style={{ fontSize: 18, marginRight: 8 }}>
               {getFlagEmoji(trip.destination.countryCode)}
             </Text>
-            <Text className="text-white/90 text-base">
+            <Text style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: 16, fontWeight: '500' }}>
               {trip.destination.city}, {trip.destination.country}
             </Text>
           </View>
@@ -68,20 +126,26 @@ export default function TripLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: '#0D9488',
-          tabBarInactiveTintColor: '#94A3B8',
+          tabBarActiveTintColor: COLORS.terracotta[500],
+          tabBarInactiveTintColor: COLORS.stone[500],
           tabBarStyle: {
-            backgroundColor: 'white',
+            backgroundColor: '#FFFFFF',
             borderTopWidth: 1,
-            borderTopColor: '#F1F5F9',
+            borderTopColor: COLORS.stone[200],
             paddingTop: 8,
             height: 60 + insets.bottom,
             paddingBottom: insets.bottom,
+            shadowColor: '#1A1714',
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.04,
+            shadowRadius: 8,
+            elevation: 4,
           },
           tabBarLabelStyle: {
             fontSize: 11,
             fontWeight: '600',
             marginTop: 2,
+            letterSpacing: 0.2,
           },
         }}
       >

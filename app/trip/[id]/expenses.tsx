@@ -10,6 +10,46 @@ import { expenseCategoryConfig } from '@/constants/theme';
 import { formatCurrency } from '@/lib/utils';
 import * as Haptics from 'expo-haptics';
 
+/**
+ * WAYFARE Expenses Screen - Bento Editorial Design
+ *
+ * Warm editorial aesthetic with terracotta accents.
+ * Group expense tracking with balance calculations.
+ */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    50: '#FEF7F4',
+    100: '#FCEEE8',
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    50: '#F0F5F2',
+    100: '#E0EBE4',
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  amber: {
+    50: '#FFFBEB',
+    100: '#FEF3C7',
+    500: '#D4A574',
+    700: '#B8860B',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
+
 export default function ExpensesScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -39,35 +79,37 @@ export default function ExpensesScreen() {
   }, {} as Record<string, Expense[]>);
 
   return (
-    <View className="flex-1 bg-slate-50">
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+    <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         {/* Summary Card */}
-        <View className="px-5 pt-5">
+        <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
           <Card variant="elevated" padding="lg">
-            <Text className="text-slate-500 text-sm">Total Group Expenses</Text>
-            <Text className="text-4xl font-bold text-slate-900 mt-1">
+            <Text style={{ color: COLORS.stone[500], fontSize: 13, fontWeight: '500' }}>Total Group Expenses</Text>
+            <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.ink[900], marginTop: 4, letterSpacing: -1 }}>
               {formatCurrency(totalExpenses)}
             </Text>
 
             {/* Balance Summary */}
-            <View className="mt-5 pt-5 border-t border-slate-100">
-              <Text className="text-sm font-semibold text-slate-700 mb-3">
+            <View style={{ marginTop: 20, paddingTop: 20, borderTopWidth: 1, borderTopColor: COLORS.stone[200] }}>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 12, letterSpacing: 0.2 }}>
                 Balances
               </Text>
               {Object.entries(balances).map(([name, balance]) => (
                 <View
                   key={name}
-                  className="flex-row items-center justify-between py-2"
+                  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 8 }}
                 >
-                  <Text className="text-slate-600">{name}</Text>
+                  <Text style={{ color: COLORS.stone[700], fontSize: 15 }}>{name}</Text>
                   <Text
-                    className={`font-semibold ${
-                      balance > 0
-                        ? 'text-emerald-600'
+                    style={{
+                      fontWeight: '600',
+                      fontSize: 15,
+                      color: balance > 0
+                        ? COLORS.forest[500]
                         : balance < 0
-                        ? 'text-red-500'
-                        : 'text-slate-500'
-                    }`}
+                        ? '#DC2626'
+                        : COLORS.stone[500],
+                    }}
                   >
                     {balance > 0 ? 'gets back ' : balance < 0 ? 'owes ' : ''}
                     {formatCurrency(Math.abs(balance))}
@@ -77,9 +119,21 @@ export default function ExpensesScreen() {
             </View>
 
             {/* Settle Up Button */}
-            <Pressable className="mt-4 bg-primary-50 rounded-2xl p-4 flex-row items-center justify-center active:bg-primary-100">
-              <Ionicons name="swap-horizontal" size={20} color="#0D9488" />
-              <Text className="text-primary-600 font-semibold ml-2">
+            <Pressable
+              onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              style={({ pressed }) => ({
+                marginTop: 16,
+                backgroundColor: COLORS.terracotta[50],
+                borderRadius: 14,
+                padding: 14,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: pressed ? 0.8 : 1,
+              })}
+            >
+              <Ionicons name="swap-horizontal" size={20} color={COLORS.terracotta[500]} />
+              <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
                 View Settlement Plan
               </Text>
             </Pressable>
@@ -90,7 +144,7 @@ export default function ExpensesScreen() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="mt-5"
+          style={{ marginTop: 20 }}
           contentContainerStyle={{ paddingHorizontal: 20 }}
         >
           <FilterChip
@@ -111,12 +165,12 @@ export default function ExpensesScreen() {
         </ScrollView>
 
         {/* Expenses List */}
-        <View className="px-5 mt-5 pb-24">
+        <View style={{ paddingHorizontal: 20, marginTop: 20, paddingBottom: 100 }}>
           {Object.entries(groupedExpenses)
             .sort(([a], [b]) => b.localeCompare(a))
             .map(([dateKey, dayExpenses]) => (
-              <View key={dateKey} className="mb-6">
-                <Text className="text-sm font-semibold text-slate-500 mb-3">
+              <View key={dateKey} style={{ marginBottom: 24 }}>
+                <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.stone[500], marginBottom: 12, letterSpacing: 0.2 }}>
                   {format(new Date(dateKey), 'EEEE, MMMM d')}
                 </Text>
                 {dayExpenses.map((expense) => (
@@ -126,9 +180,9 @@ export default function ExpensesScreen() {
             ))}
 
           {filteredExpenses.length === 0 && (
-            <View className="items-center py-12">
-              <Ionicons name="receipt-outline" size={48} color="#CBD5E1" />
-              <Text className="text-slate-500 mt-4 font-medium">
+            <View style={{ alignItems: 'center', paddingVertical: 48 }}>
+              <Ionicons name="receipt-outline" size={48} color={COLORS.stone[300]} />
+              <Text style={{ color: COLORS.stone[500], marginTop: 16, fontWeight: '500', fontSize: 15 }}>
                 No expenses yet
               </Text>
             </View>
@@ -142,13 +196,23 @@ export default function ExpensesScreen() {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           setShowAddModal(true);
         }}
-        className="absolute bottom-6 right-6 w-14 h-14 bg-primary-500 rounded-2xl items-center justify-center shadow-lg"
-        style={{
-          shadowColor: '#0D9488',
+        style={({ pressed }) => ({
+          position: 'absolute',
+          bottom: 24,
+          right: 24,
+          width: 56,
+          height: 56,
+          backgroundColor: COLORS.terracotta[500],
+          borderRadius: 18,
+          alignItems: 'center',
+          justifyContent: 'center',
+          shadowColor: COLORS.terracotta[500],
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.3,
-          shadowRadius: 8,
-        }}
+          shadowRadius: 12,
+          elevation: 8,
+          transform: pressed ? [{ scale: 0.95 }] : [{ scale: 1 }],
+        })}
       >
         <Ionicons name="add" size={28} color="white" />
       </Pressable>
@@ -182,9 +246,18 @@ function FilterChip({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         onPress();
       }}
-      className={`flex-row items-center px-4 py-2.5 rounded-full mr-2 ${
-        active ? 'bg-primary-500' : 'bg-white border border-slate-200'
-      }`}
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 12,
+        marginRight: 8,
+        backgroundColor: active ? COLORS.terracotta[500] : '#FFFFFF',
+        borderWidth: active ? 0 : 1,
+        borderColor: COLORS.stone[200],
+        opacity: pressed ? 0.8 : 1,
+      })}
     >
       {icon && (
         <Ionicons
@@ -194,7 +267,7 @@ function FilterChip({
           style={{ marginRight: 6 }}
         />
       )}
-      <Text className={`font-semibold ${active ? 'text-white' : 'text-slate-600'}`}>
+      <Text style={{ fontWeight: '600', fontSize: 14, color: active ? 'white' : COLORS.stone[700] }}>
         {label}
       </Text>
     </Pressable>
@@ -205,46 +278,60 @@ function ExpenseCard({ expense }: { expense: Expense }) {
   const config = expenseCategoryConfig[expense.category];
 
   return (
-    <Card variant="elevated" className="mb-3" padding="md">
-      <View className="flex-row items-center">
+    <Card variant="elevated" style={{ marginBottom: 12 }} padding="md">
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
-          className="w-11 h-11 rounded-xl items-center justify-center"
-          style={{ backgroundColor: `${config.color}20` }}
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: `${config.color}20`,
+          }}
         >
           <Ionicons name={config.icon as any} size={22} color={config.color} />
         </View>
-        <View className="flex-1 ml-3">
-          <Text className="font-semibold text-slate-900">{expense.description}</Text>
-          <Text className="text-slate-500 text-sm">
+        <View style={{ flex: 1, marginLeft: 14 }}>
+          <Text style={{ fontWeight: '600', color: COLORS.ink[900], fontSize: 15 }}>{expense.description}</Text>
+          <Text style={{ color: COLORS.stone[500], fontSize: 13, marginTop: 2 }}>
             Paid by {expense.paidByName}
           </Text>
         </View>
-        <View className="items-end">
-          <Text className="font-bold text-slate-900 text-lg">
+        <View style={{ alignItems: 'flex-end' }}>
+          <Text style={{ fontWeight: '700', color: COLORS.ink[900], fontSize: 17 }}>
             {formatCurrency(expense.amount.amount)}
           </Text>
-          <Text className="text-slate-400 text-xs">
+          <Text style={{ color: COLORS.stone[500], fontSize: 12, marginTop: 2 }}>
             {expense.splitBetween.length} people
           </Text>
         </View>
       </View>
 
       {/* Split Details */}
-      <View className="mt-3 pt-3 border-t border-slate-100">
-        <View className="flex-row flex-wrap">
+      <View style={{ marginTop: 14, paddingTop: 14, borderTopWidth: 1, borderTopColor: COLORS.stone[200] }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {expense.splitBetween.map((split) => (
             <View
               key={split.travelerId}
-              className={`flex-row items-center mr-4 mb-1 ${
-                split.settled ? 'opacity-50' : ''
-              }`}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginRight: 16,
+                marginBottom: 4,
+                opacity: split.settled ? 0.5 : 1,
+              }}
             >
               <View
-                className={`w-2 h-2 rounded-full mr-1.5 ${
-                  split.settled ? 'bg-emerald-500' : 'bg-amber-500'
-                }`}
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  marginRight: 6,
+                  backgroundColor: split.settled ? COLORS.forest[500] : COLORS.amber[500],
+                }}
               />
-              <Text className="text-sm text-slate-600">
+              <Text style={{ fontSize: 13, color: COLORS.stone[700] }}>
                 {split.travelerName}: {formatCurrency(split.amount)}
               </Text>
             </View>
@@ -279,71 +366,91 @@ function AddExpenseModal({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <View className="flex-1 bg-white">
+      <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
         {/* Header */}
-        <View className="flex-row items-center justify-between px-5 py-4 border-b border-slate-100">
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 20,
+          paddingVertical: 16,
+          borderBottomWidth: 1,
+          borderBottomColor: COLORS.stone[200],
+        }}>
           <Pressable onPress={onClose}>
-            <Text className="text-slate-500 font-semibold">Cancel</Text>
+            <Text style={{ color: COLORS.stone[500], fontWeight: '600', fontSize: 15 }}>Cancel</Text>
           </Pressable>
-          <Text className="text-lg font-bold text-slate-900">Add Expense</Text>
+          <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.ink[900] }}>Add Expense</Text>
           <Pressable onPress={handleSave}>
-            <Text className="text-primary-600 font-semibold">Save</Text>
+            <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', fontSize: 15 }}>Save</Text>
           </Pressable>
         </View>
 
-        <ScrollView className="flex-1 px-5 pt-6">
+        <ScrollView style={{ flex: 1, paddingHorizontal: 20, paddingTop: 24 }}>
           {/* Amount Input */}
-          <View className="items-center mb-8">
-            <Text className="text-slate-500 mb-2">Amount</Text>
-            <View className="flex-row items-center">
-              <Text className="text-4xl font-light text-slate-400">£</Text>
+          <View style={{ alignItems: 'center', marginBottom: 32 }}>
+            <Text style={{ color: COLORS.stone[500], marginBottom: 8, fontSize: 14 }}>Amount</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 40, fontWeight: '300', color: COLORS.stone[300] }}>£</Text>
               <TextInput
                 value={amount}
                 onChangeText={setAmount}
                 placeholder="0.00"
-                placeholderTextColor="#CBD5E1"
+                placeholderTextColor={COLORS.stone[300]}
                 keyboardType="decimal-pad"
-                className="text-5xl font-bold text-slate-900 ml-1"
-                style={{ minWidth: 100 }}
+                style={{
+                  fontSize: 48,
+                  fontWeight: '700',
+                  color: COLORS.ink[900],
+                  marginLeft: 4,
+                  minWidth: 100,
+                }}
               />
             </View>
           </View>
 
           {/* Quick Amount Buttons */}
-          <View className="flex-row justify-center mb-8">
+          <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 32 }}>
             {['10', '25', '50', '100'].map((val) => (
               <Pressable
                 key={val}
                 onPress={() => setAmount(val)}
-                className="px-5 py-2.5 bg-slate-100 rounded-full mx-1.5 active:bg-slate-200"
+                style={({ pressed }) => ({
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  backgroundColor: COLORS.stone[100],
+                  borderRadius: 12,
+                  marginHorizontal: 6,
+                  opacity: pressed ? 0.8 : 1,
+                })}
               >
-                <Text className="text-slate-700 font-semibold">£{val}</Text>
+                <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 15 }}>£{val}</Text>
               </Pressable>
             ))}
           </View>
 
           {/* Description */}
-          <View className="mb-6">
-            <Text className="text-sm font-semibold text-slate-700 mb-2">
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 8, letterSpacing: 0.2 }}>
               Description
             </Text>
-            <View className="bg-slate-50 rounded-2xl px-4 py-4">
+            <View style={{ backgroundColor: COLORS.stone[100], borderRadius: 14, paddingHorizontal: 16, paddingVertical: 14 }}>
               <TextInput
                 value={description}
                 onChangeText={setDescription}
                 placeholder="What was this for?"
-                placeholderTextColor="#94A3B8"
-                className="text-slate-900 text-base"
+                placeholderTextColor={COLORS.stone[500]}
+                style={{ color: COLORS.ink[900], fontSize: 16 }}
               />
             </View>
           </View>
 
           {/* Category */}
-          <View className="mb-6">
-            <Text className="text-sm font-semibold text-slate-700 mb-3">
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 12, letterSpacing: 0.2 }}>
               Category
             </Text>
-            <View className="flex-row flex-wrap">
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {Object.entries(expenseCategoryConfig).map(([key, config]) => (
                 <Pressable
                   key={key}
@@ -351,9 +458,17 @@ function AddExpenseModal({
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     setCategory(key as ExpenseCategory);
                   }}
-                  className={`flex-row items-center px-4 py-2.5 rounded-full mr-2 mb-2 ${
-                    category === key ? 'bg-primary-500' : 'bg-slate-100'
-                  }`}
+                  style={({ pressed }) => ({
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 14,
+                    paddingVertical: 10,
+                    borderRadius: 12,
+                    marginRight: 8,
+                    marginBottom: 8,
+                    backgroundColor: category === key ? COLORS.terracotta[500] : COLORS.stone[100],
+                    opacity: pressed ? 0.8 : 1,
+                  })}
                 >
                   <Ionicons
                     name={config.icon as any}
@@ -361,9 +476,12 @@ function AddExpenseModal({
                     color={category === key ? 'white' : config.color}
                   />
                   <Text
-                    className={`ml-2 font-semibold ${
-                      category === key ? 'text-white' : 'text-slate-700'
-                    }`}
+                    style={{
+                      marginLeft: 8,
+                      fontWeight: '600',
+                      fontSize: 14,
+                      color: category === key ? 'white' : COLORS.ink[900],
+                    }}
                   >
                     {config.label}
                   </Text>
@@ -373,8 +491,8 @@ function AddExpenseModal({
           </View>
 
           {/* Paid By */}
-          <View className="mb-6">
-            <Text className="text-sm font-semibold text-slate-700 mb-3">
+          <View style={{ marginBottom: 24 }}>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 12, letterSpacing: 0.2 }}>
               Paid by
             </Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -385,14 +503,22 @@ function AddExpenseModal({
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     setPaidBy(traveler.id);
                   }}
-                  className={`items-center mr-4 p-3 rounded-2xl ${
-                    paidBy === traveler.id ? 'bg-primary-50' : ''
-                  }`}
+                  style={({ pressed }) => ({
+                    alignItems: 'center',
+                    marginRight: 16,
+                    padding: 12,
+                    borderRadius: 16,
+                    backgroundColor: paidBy === traveler.id ? COLORS.terracotta[50] : 'transparent',
+                    opacity: pressed ? 0.8 : 1,
+                  })}
                 >
                   <View
-                    className={`rounded-full p-0.5 ${
-                      paidBy === traveler.id ? 'border-2 border-primary-500' : ''
-                    }`}
+                    style={{
+                      borderRadius: 28,
+                      padding: 2,
+                      borderWidth: paidBy === traveler.id ? 2 : 0,
+                      borderColor: COLORS.terracotta[500],
+                    }}
                   >
                     <Avatar
                       source={traveler.avatarUrl}
@@ -401,9 +527,12 @@ function AddExpenseModal({
                     />
                   </View>
                   <Text
-                    className={`mt-2 text-sm font-medium ${
-                      paidBy === traveler.id ? 'text-primary-600' : 'text-slate-600'
-                    }`}
+                    style={{
+                      marginTop: 8,
+                      fontSize: 13,
+                      fontWeight: '500',
+                      color: paidBy === traveler.id ? COLORS.terracotta[500] : COLORS.stone[700],
+                    }}
                   >
                     {traveler.name.split(' ')[0]}
                   </Text>
@@ -413,18 +542,30 @@ function AddExpenseModal({
           </View>
 
           {/* Receipt */}
-          <Pressable className="mb-8 border-2 border-dashed border-slate-300 rounded-2xl p-6 items-center active:bg-slate-50">
-            <Ionicons name="camera" size={32} color="#94A3B8" />
-            <Text className="text-slate-500 font-semibold mt-2">
+          <Pressable
+            onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+            style={({ pressed }) => ({
+              marginBottom: 32,
+              borderWidth: 2,
+              borderStyle: 'dashed',
+              borderColor: COLORS.stone[300],
+              borderRadius: 16,
+              padding: 24,
+              alignItems: 'center',
+              backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
+            })}
+          >
+            <Ionicons name="camera" size={32} color={COLORS.stone[500]} />
+            <Text style={{ color: COLORS.stone[700], fontWeight: '600', marginTop: 8, fontSize: 15 }}>
               Add Receipt Photo
             </Text>
-            <Text className="text-slate-400 text-sm mt-1">
+            <Text style={{ color: COLORS.stone[500], fontSize: 13, marginTop: 4 }}>
               Tap to scan or upload
             </Text>
           </Pressable>
         </ScrollView>
 
-        <View className="px-5 py-4 border-t border-slate-100">
+        <View style={{ paddingHorizontal: 20, paddingVertical: 16, borderTopWidth: 1, borderTopColor: COLORS.stone[200] }}>
           <Button
             title="Add Expense"
             onPress={handleSave}

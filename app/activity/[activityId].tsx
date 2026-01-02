@@ -5,10 +5,50 @@ import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { mockItineraryDays } from '@/lib/mock-data';
 import { Activity } from '@/types';
-import { Button, Card, Badge, IconButton } from '@/components/ui';
+import { Card, Badge } from '@/components/ui';
 import { activityColors, activityIcons } from '@/constants/theme';
 import { formatCurrency, formatDuration } from '@/lib/utils';
 import * as Haptics from 'expo-haptics';
+
+/**
+ * WAYFARE Activity Detail Screen - Bento Editorial Design
+ *
+ * Warm editorial aesthetic with terracotta accents.
+ * Comprehensive activity information with booking details.
+ */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    50: '#FEF7F4',
+    100: '#FCEEE8',
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    50: '#F0F5F2',
+    100: '#E0EBE4',
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  amber: {
+    50: '#FFFBEB',
+    100: '#FEF3C7',
+    500: '#D4A574',
+    700: '#B8860B',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
 
 export default function ActivityDetailScreen() {
   const { activityId } = useLocalSearchParams<{ activityId: string }>();
@@ -26,9 +66,9 @@ export default function ActivityDetailScreen() {
 
   if (!activity) {
     return (
-      <SafeAreaView className="flex-1 bg-white items-center justify-center">
-        <Ionicons name="alert-circle-outline" size={48} color="#94A3B8" />
-        <Text className="text-slate-500 mt-4">Activity not found</Text>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.cream, alignItems: 'center', justifyContent: 'center' }}>
+        <Ionicons name="alert-circle-outline" size={48} color={COLORS.stone[500]} />
+        <Text style={{ color: COLORS.stone[500], marginTop: 16, fontSize: 16 }}>Activity not found</Text>
       </SafeAreaView>
     );
   }
@@ -54,55 +94,107 @@ export default function ActivityDetailScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.cream }}>
       {/* Header */}
-      <View className="bg-white px-4 py-3 flex-row items-center border-b border-slate-100">
-        <IconButton icon="close" onPress={() => router.back()} variant="ghost" />
-        <Text className="flex-1 text-lg font-bold text-slate-900 ml-2">
+      <View style={{
+        backgroundColor: '#FFFFFF',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: COLORS.stone[200],
+      }}>
+        <Pressable
+          onPress={() => router.back()}
+          style={({ pressed }) => ({
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            backgroundColor: COLORS.stone[100],
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: pressed ? 0.8 : 1,
+          })}
+        >
+          <Ionicons name="close" size={22} color={COLORS.stone[700]} />
+        </Pressable>
+        <Text style={{ flex: 1, fontSize: 17, fontWeight: '600', color: COLORS.ink[900], marginLeft: 12 }}>
           Activity Details
         </Text>
-        <IconButton icon="create-outline" onPress={() => {}} variant="ghost" />
+        <Pressable
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+          style={({ pressed }) => ({
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            backgroundColor: COLORS.stone[100],
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: pressed ? 0.8 : 1,
+          })}
+        >
+          <Ionicons name="create-outline" size={20} color={COLORS.stone[700]} />
+        </Pressable>
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        <View className="px-5 py-6">
+      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <View style={{ padding: 20 }}>
           {/* Header Card */}
           <Card variant="elevated" padding="lg">
-            <View className="flex-row items-start">
-              <View
-                className="w-16 h-16 rounded-2xl items-center justify-center"
-                style={{ backgroundColor: `${color}20` }}
-              >
+            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+              <View style={{
+                width: 64,
+                height: 64,
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: `${color}20`,
+              }}>
                 <Ionicons name={icon as any} size={32} color={color} />
               </View>
-              <View className="ml-4 flex-1">
-                <View className="flex-row items-center mb-2">
-                  <Badge
-                    label={activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
-                    variant="primary"
-                  />
+              <View style={{ marginLeft: 16, flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                  <View style={{
+                    backgroundColor: COLORS.terracotta[100],
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    borderRadius: 8,
+                  }}>
+                    <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.terracotta[600] }}>
+                      {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                    </Text>
+                  </View>
                   {activity.bookingStatus === 'booked' && (
-                    <View className="ml-2">
-                      <Badge label="Booked" variant="success" />
+                    <View style={{
+                      marginLeft: 8,
+                      backgroundColor: COLORS.forest[100],
+                      paddingHorizontal: 10,
+                      paddingVertical: 4,
+                      borderRadius: 8,
+                    }}>
+                      <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.forest[700] }}>
+                        Booked
+                      </Text>
                     </View>
                   )}
                 </View>
-                <Text className="text-2xl font-bold text-slate-900">
+                <Text style={{ fontSize: 22, fontWeight: '700', color: COLORS.ink[900], letterSpacing: -0.3 }}>
                   {activity.title}
                 </Text>
               </View>
             </View>
 
             {activity.description && (
-              <Text className="text-slate-600 mt-4 leading-relaxed text-base">
+              <Text style={{ color: COLORS.stone[500], marginTop: 16, lineHeight: 24, fontSize: 15 }}>
                 {activity.description}
               </Text>
             )}
           </Card>
 
           {/* Time & Duration */}
-          <Card variant="elevated" className="mt-4">
-            <Text className="font-bold text-slate-900 mb-4 text-lg">
+          <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+            <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
               Time & Duration
             </Text>
 
@@ -132,15 +224,17 @@ export default function ActivityDetailScreen() {
 
           {/* Location */}
           {activity.location && (
-            <Card variant="elevated" className="mt-4">
-              <Text className="font-bold text-slate-900 mb-4 text-lg">Location</Text>
+            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+              <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
+                Location
+              </Text>
 
-              <View className="bg-slate-50 rounded-2xl p-4">
-                <Text className="text-slate-900 font-semibold text-base">
+              <View style={{ backgroundColor: COLORS.stone[100], borderRadius: 16, padding: 16 }}>
+                <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 16 }}>
                   {activity.location.name}
                 </Text>
                 {activity.location.address && (
-                  <Text className="text-slate-500 text-sm mt-1">
+                  <Text style={{ color: COLORS.stone[500], fontSize: 14, marginTop: 4 }}>
                     {activity.location.address}
                   </Text>
                 )}
@@ -148,10 +242,17 @@ export default function ActivityDetailScreen() {
 
               <Pressable
                 onPress={handleOpenMaps}
-                className="flex-row items-center justify-center mt-4 py-3 active:opacity-80"
+                style={({ pressed }) => ({
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 16,
+                  paddingVertical: 12,
+                  opacity: pressed ? 0.8 : 1,
+                })}
               >
-                <Ionicons name="navigate" size={18} color="#0D9488" />
-                <Text className="text-primary-600 font-semibold ml-2">
+                <Ionicons name="navigate" size={18} color={COLORS.terracotta[500]} />
+                <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
                   Open in Maps
                 </Text>
               </Pressable>
@@ -160,11 +261,20 @@ export default function ActivityDetailScreen() {
 
           {/* Cost */}
           {activity.estimatedCost && (
-            <Card variant="elevated" className="mt-4">
-              <Text className="font-bold text-slate-900 mb-4 text-lg">Cost</Text>
-              <View className="bg-primary-50 rounded-2xl p-4 flex-row items-center justify-between">
-                <Text className="text-primary-700">Estimated cost</Text>
-                <Text className="text-2xl font-bold text-primary-900">
+            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+              <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
+                Cost
+              </Text>
+              <View style={{
+                backgroundColor: COLORS.terracotta[50],
+                borderRadius: 16,
+                padding: 16,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+                <Text style={{ color: COLORS.terracotta[600], fontSize: 15 }}>Estimated cost</Text>
+                <Text style={{ fontSize: 24, fontWeight: '700', color: COLORS.terracotta[500] }}>
                   {formatCurrency(activity.estimatedCost.amount)}
                 </Text>
               </View>
@@ -173,19 +283,26 @@ export default function ActivityDetailScreen() {
 
           {/* Booking Info */}
           {(activity.bookingUrl || activity.bookingReference) && (
-            <Card variant="elevated" className="mt-4">
-              <Text className="font-bold text-slate-900 mb-4 text-lg">
+            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+              <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
                 Booking Information
               </Text>
 
               {activity.bookingReference && (
-                <View className="bg-emerald-50 rounded-2xl p-4 mb-4 flex-row items-center">
-                  <Ionicons name="ticket" size={24} color="#059669" />
-                  <View className="ml-4">
-                    <Text className="text-emerald-700 text-sm">
+                <View style={{
+                  backgroundColor: COLORS.forest[50],
+                  borderRadius: 16,
+                  padding: 16,
+                  marginBottom: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                  <Ionicons name="ticket" size={24} color={COLORS.forest[500]} />
+                  <View style={{ marginLeft: 16 }}>
+                    <Text style={{ color: COLORS.forest[500], fontSize: 13 }}>
                       Confirmation number
                     </Text>
-                    <Text className="text-emerald-900 font-bold text-xl">
+                    <Text style={{ color: COLORS.forest[700], fontWeight: '700', fontSize: 20 }}>
                       {activity.bookingReference}
                     </Text>
                   </View>
@@ -193,24 +310,43 @@ export default function ActivityDetailScreen() {
               )}
 
               {activity.bookingUrl && (
-                <Button
-                  title="View Booking"
+                <Pressable
                   onPress={handleOpenBooking}
-                  variant="outline"
-                  fullWidth
-                  icon={<Ionicons name="open-outline" size={18} color="#0D9488" />}
-                />
+                  style={({ pressed }) => ({
+                    borderWidth: 2,
+                    borderColor: COLORS.terracotta[500],
+                    borderRadius: 14,
+                    paddingVertical: 14,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    opacity: pressed ? 0.9 : 1,
+                  })}
+                >
+                  <Ionicons name="open-outline" size={18} color={COLORS.terracotta[500]} />
+                  <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+                    View Booking
+                  </Text>
+                </Pressable>
               )}
             </Card>
           )}
 
           {/* Notes */}
           {activity.notes && (
-            <Card variant="elevated" className="mt-4">
-              <Text className="font-bold text-slate-900 mb-4 text-lg">Notes</Text>
-              <View className="bg-amber-50 rounded-2xl p-4 flex-row items-start">
-                <Ionicons name="bulb" size={20} color="#D97706" />
-                <Text className="text-amber-800 ml-3 flex-1 leading-relaxed">
+            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+              <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
+                Notes
+              </Text>
+              <View style={{
+                backgroundColor: COLORS.amber[50],
+                borderRadius: 16,
+                padding: 16,
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+                <Ionicons name="bulb" size={20} color={COLORS.amber[500]} />
+                <Text style={{ color: COLORS.amber[700], marginLeft: 12, flex: 1, lineHeight: 22, fontSize: 14 }}>
                   {activity.notes}
                 </Text>
               </View>
@@ -219,35 +355,48 @@ export default function ActivityDetailScreen() {
 
           {/* Alternatives */}
           {activity.alternatives && activity.alternatives.length > 0 && (
-            <Card variant="elevated" className="mt-4">
-              <View className="flex-row items-center justify-between mb-4">
-                <Text className="font-bold text-slate-900 text-lg">Alternatives</Text>
-                <Badge
-                  label={`${activity.alternatives.length} option${
-                    activity.alternatives.length > 1 ? 's' : ''
-                  }`}
-                  variant="primary"
-                />
+            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <Text style={{ fontWeight: '700', color: COLORS.ink[900], fontSize: 17 }}>
+                  Alternatives
+                </Text>
+                <View style={{
+                  backgroundColor: COLORS.terracotta[100],
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                  borderRadius: 8,
+                }}>
+                  <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.terracotta[600] }}>
+                    {activity.alternatives.length} option{activity.alternatives.length > 1 ? 's' : ''}
+                  </Text>
+                </View>
               </View>
-              <Text className="text-slate-500 text-sm mb-4">
+              <Text style={{ color: COLORS.stone[500], fontSize: 14, marginBottom: 16 }}>
                 Backup options in case of weather or cancellation
               </Text>
 
               {activity.alternatives.map((alt) => (
                 <Pressable
                   key={alt.id}
-                  className="border border-slate-200 rounded-2xl p-4 mb-3 active:bg-slate-50"
+                  style={({ pressed }) => ({
+                    borderWidth: 1,
+                    borderColor: COLORS.stone[200],
+                    borderRadius: 16,
+                    padding: 16,
+                    marginBottom: 12,
+                    backgroundColor: pressed ? COLORS.stone[100] : '#FFFFFF',
+                  })}
                 >
-                  <Text className="font-semibold text-slate-900 text-base">
+                  <Text style={{ fontWeight: '600', color: COLORS.ink[900], fontSize: 16 }}>
                     {alt.title}
                   </Text>
                   {alt.description && (
-                    <Text className="text-slate-500 text-sm mt-1">
+                    <Text style={{ color: COLORS.stone[500], fontSize: 14, marginTop: 4 }}>
                       {alt.description}
                     </Text>
                   )}
                   {alt.estimatedCost && (
-                    <Text className="text-primary-600 font-semibold mt-2">
+                    <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginTop: 8 }}>
                       {formatCurrency(alt.estimatedCost.amount)}
                     </Text>
                   )}
@@ -257,19 +406,34 @@ export default function ActivityDetailScreen() {
           )}
 
           {/* Action Buttons */}
-          <View className="mt-6 mb-4">
-            <Button
-              title="Mark as Completed"
+          <View style={{ marginTop: 24, marginBottom: 16 }}>
+            <Pressable
               onPress={() => {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
               }}
-              variant="primary"
-              fullWidth
-              size="lg"
-              icon={<Ionicons name="checkmark-circle" size={20} color="white" />}
-            />
-            <Pressable className="mt-4 py-3 active:opacity-80">
-              <Text className="text-center text-red-500 font-semibold">
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.forest[700],
+                borderRadius: 16,
+                paddingVertical: 16,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: pressed ? 0.9 : 1,
+              })}
+            >
+              <Ionicons name="checkmark-circle" size={20} color="white" />
+              <Text style={{ color: '#FFFFFF', fontWeight: '600', marginLeft: 8, fontSize: 16 }}>
+                Mark as Completed
+              </Text>
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => ({
+                marginTop: 16,
+                paddingVertical: 12,
+                opacity: pressed ? 0.8 : 1,
+              })}
+            >
+              <Text style={{ textAlign: 'center', color: '#DC2626', fontWeight: '600', fontSize: 15 }}>
                 Remove from Itinerary
               </Text>
             </Pressable>
@@ -292,16 +456,25 @@ function DetailRow({
   isLast?: boolean;
 }) {
   return (
-    <View
-      className={`flex-row items-center py-3 ${
-        !isLast ? 'border-b border-slate-100' : ''
-      }`}
-    >
-      <View className="w-10 h-10 bg-slate-100 rounded-xl items-center justify-center">
-        <Ionicons name={icon as any} size={20} color="#64748B" />
+    <View style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      borderBottomWidth: isLast ? 0 : 1,
+      borderBottomColor: COLORS.stone[200],
+    }}>
+      <View style={{
+        width: 40,
+        height: 40,
+        backgroundColor: COLORS.stone[100],
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <Ionicons name={icon as any} size={20} color={COLORS.stone[700]} />
       </View>
-      <Text className="ml-3 text-slate-500 flex-1">{label}</Text>
-      <Text className="font-semibold text-slate-900">{value}</Text>
+      <Text style={{ marginLeft: 12, color: COLORS.stone[500], flex: 1, fontSize: 15 }}>{label}</Text>
+      <Text style={{ fontWeight: '600', color: COLORS.ink[900], fontSize: 15 }}>{value}</Text>
     </View>
   );
 }

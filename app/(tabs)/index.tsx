@@ -11,11 +11,44 @@ import { getTimeUntil, getFlagEmoji } from '@/lib/utils';
 import * as Haptics from 'expo-haptics';
 
 /**
- * WAYFARE Trips Screen - Minimal Brutalist Design
+ * WAYFARE Trips Screen - Bento Editorial Design
  *
- * High contrast black/white with yellow accent. Bold typography,
- * 3px borders, hard shadow offsets. Raw, honest interface.
+ * Warm editorial aesthetic with terracotta accents.
+ * Organic rounded cards with soft shadows.
  */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    50: '#FEF7F4',
+    100: '#FCEEE8',
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    50: '#F0F5F2',
+    100: '#E0EBE4',
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  amber: {
+    50: '#FFFBEB',
+    100: '#FEF3C7',
+    500: '#D4A574',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
+
 export default function TripsScreen() {
   const router = useRouter();
   const { trips, user } = useAppStore();
@@ -31,176 +64,156 @@ export default function TripsScreen() {
   const pastTrips = trips.filter((t) => t.status === 'completed');
 
   const handleNewTrip = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     router.push('/trip/new');
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      {/* Header - Brutalist */}
-      <View className="px-6 pt-6 pb-4">
-        <View className="flex-row items-end justify-between">
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.cream }} edges={['top']}>
+      {/* Header */}
+      <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' }}>
           <View>
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: '700',
-                color: '#737373',
-                letterSpacing: 1.5,
-                textTransform: 'uppercase',
-                marginBottom: 4,
-              }}
-            >
-              WELCOME BACK
+            <Text style={{
+              fontSize: 14,
+              fontWeight: '500',
+              color: COLORS.stone[500],
+              marginBottom: 4,
+            }}>
+              Welcome back
             </Text>
-            <Text
-              style={{
-                fontSize: 32,
-                fontWeight: '900',
-                color: '#000000',
-                letterSpacing: -1,
-                textTransform: 'uppercase',
-              }}
-            >
-              {user?.displayName?.split(' ')[0] || 'TRAVELLER'}
+            <Text style={{
+              fontSize: 28,
+              fontWeight: '700',
+              color: COLORS.ink[900],
+              letterSpacing: -0.5,
+            }}>
+              {user?.displayName?.split(' ')[0] || 'Traveller'}
             </Text>
           </View>
 
-          {/* Add Button - Brutalist with hard shadow */}
+          {/* Add Button */}
           <Pressable
             onPress={handleNewTrip}
             style={({ pressed }) => ({
-              width: 56,
-              height: 56,
-              backgroundColor: '#FACC15',
-              borderWidth: 3,
-              borderColor: '#000000',
+              width: 52,
+              height: 52,
+              backgroundColor: COLORS.terracotta[500],
+              borderRadius: 16,
               alignItems: 'center',
               justifyContent: 'center',
-              shadowColor: '#000000',
-              shadowOffset: pressed
-                ? { width: 2, height: 2 }
-                : { width: 4, height: 4 },
-              shadowOpacity: 1,
-              shadowRadius: 0,
-              transform: pressed
-                ? [{ translateX: 2 }, { translateY: 2 }]
-                : [{ translateX: 0 }, { translateY: 0 }],
+              shadowColor: '#1A1714',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.15,
+              shadowRadius: 12,
+              elevation: 6,
+              transform: pressed ? [{ scale: 0.95 }] : [{ scale: 1 }],
             })}
           >
-            <Ionicons name="add" size={28} color="#000000" />
+            <Ionicons name="add" size={26} color="#FFFFFF" />
           </Pressable>
         </View>
-
-        {/* Divider */}
-        <View style={{ height: 3, backgroundColor: '#000000', marginTop: 16 }} />
       </View>
 
       <ScrollView
-        className="flex-1"
+        style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#000000" />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={COLORS.terracotta[500]}
+          />
         }
       >
         {trips.length === 0 ? (
           <EmptyState
             icon="compass-outline"
-            title="NO TRIPS YET"
+            title="No trips yet"
             description="Start planning your next adventure. We'll help you create the perfect itinerary."
-            actionLabel="PLAN A TRIP"
+            actionLabel="Plan a Trip"
             onAction={handleNewTrip}
           />
         ) : (
-          <View className="px-6">
+          <View style={{ paddingHorizontal: 20 }}>
             {/* Upcoming Section */}
             {upcomingTrips.length > 0 && (
-              <View className="mb-8">
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '700',
-                    color: '#000000',
-                    letterSpacing: 2,
-                    textTransform: 'uppercase',
-                    marginBottom: 16,
-                  }}
-                >
-                  UPCOMING [{upcomingTrips.length}]
+              <View style={{ marginBottom: 32 }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontWeight: '600',
+                  color: COLORS.stone[500],
+                  letterSpacing: 0.5,
+                  textTransform: 'uppercase',
+                  marginBottom: 16,
+                  paddingHorizontal: 4,
+                }}>
+                  Upcoming · {upcomingTrips.length}
                 </Text>
                 {upcomingTrips.map((trip) => (
-                  <BrutalTripCard key={trip.id} trip={trip} />
+                  <TripCard key={trip.id} trip={trip} />
                 ))}
               </View>
             )}
 
             {/* Past Trips Section */}
             {pastTrips.length > 0 && (
-              <View className="mb-8">
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '700',
-                    color: '#737373',
-                    letterSpacing: 2,
-                    textTransform: 'uppercase',
-                    marginBottom: 16,
-                  }}
-                >
-                  COMPLETED [{pastTrips.length}]
+              <View style={{ marginBottom: 32 }}>
+                <Text style={{
+                  fontSize: 12,
+                  fontWeight: '600',
+                  color: COLORS.stone[500],
+                  letterSpacing: 0.5,
+                  textTransform: 'uppercase',
+                  marginBottom: 16,
+                  paddingHorizontal: 4,
+                }}>
+                  Completed · {pastTrips.length}
                 </Text>
                 {pastTrips.map((trip) => (
-                  <BrutalTripCard key={trip.id} trip={trip} isPast />
+                  <TripCard key={trip.id} trip={trip} isPast />
                 ))}
               </View>
             )}
 
-            {/* Add New Trip - Brutalist dashed */}
+            {/* Add New Trip Card */}
             <Pressable
               onPress={handleNewTrip}
               style={({ pressed }) => ({
-                borderWidth: 3,
+                borderWidth: 2,
                 borderStyle: 'dashed',
-                borderColor: '#000000',
+                borderColor: COLORS.stone[300],
+                borderRadius: 24,
                 padding: 24,
                 alignItems: 'center',
                 marginBottom: 24,
-                backgroundColor: pressed ? '#F5F5F5' : 'transparent',
+                backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
               })}
             >
-              <View
-                style={{
-                  width: 48,
-                  height: 48,
-                  backgroundColor: '#FACC15',
-                  borderWidth: 2,
-                  borderColor: '#000000',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 12,
-                }}
-              >
-                <Ionicons name="add" size={24} color="#000000" />
+              <View style={{
+                width: 56,
+                height: 56,
+                backgroundColor: COLORS.terracotta[100],
+                borderRadius: 18,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 12,
+              }}>
+                <Ionicons name="add" size={28} color={COLORS.terracotta[500]} />
               </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: '700',
-                  color: '#000000',
-                  letterSpacing: 1,
-                  textTransform: 'uppercase',
-                }}
-              >
-                PLAN NEW TRIP
+              <Text style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: COLORS.ink[900],
+                marginBottom: 4,
+              }}>
+                Plan New Trip
               </Text>
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: '#737373',
-                  marginTop: 4,
-                }}
-              >
+              <Text style={{
+                fontSize: 14,
+                color: COLORS.stone[500],
+              }}>
                 AI-powered itineraries
               </Text>
             </Pressable>
@@ -211,11 +224,11 @@ export default function TripsScreen() {
   );
 }
 
-function BrutalTripCard({ trip, isPast = false }: { trip: Trip; isPast?: boolean }) {
+function TripCard({ trip, isPast = false }: { trip: Trip; isPast?: boolean }) {
   const router = useRouter();
 
   const handlePress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     router.push(`/trip/${trip.id}`);
   };
 
@@ -226,10 +239,10 @@ function BrutalTripCard({ trip, isPast = false }: { trip: Trip; isPast?: boolean
   const timeUntil = trip.startDate ? getTimeUntil(trip.startDate) : null;
 
   const statusConfig: Record<string, { label: string; bg: string; text: string }> = {
-    planning: { label: 'PLANNING', bg: '#FACC15', text: '#000000' },
-    booked: { label: 'BOOKED', bg: '#000000', text: '#FFFFFF' },
-    active: { label: 'ACTIVE', bg: '#FACC15', text: '#000000' },
-    completed: { label: 'DONE', bg: '#E5E5E5', text: '#737373' },
+    planning: { label: 'Planning', bg: COLORS.amber[100], text: COLORS.amber[500] },
+    booked: { label: 'Booked', bg: COLORS.forest[100], text: COLORS.forest[700] },
+    active: { label: 'Active', bg: COLORS.terracotta[100], text: COLORS.terracotta[600] },
+    completed: { label: 'Done', bg: COLORS.stone[200], text: COLORS.stone[700] },
   };
 
   const status = statusConfig[trip.status] || statusConfig.planning;
@@ -238,170 +251,184 @@ function BrutalTripCard({ trip, isPast = false }: { trip: Trip; isPast?: boolean
     <Pressable
       onPress={handlePress}
       style={({ pressed }) => ({
-        backgroundColor: '#FFFFFF',
-        borderWidth: 3,
-        borderColor: '#000000',
         marginBottom: 16,
-        opacity: isPast ? 0.7 : 1,
-        shadowColor: '#000000',
-        shadowOffset: pressed
-          ? { width: 2, height: 2 }
-          : { width: 4, height: 4 },
-        shadowOpacity: 1,
-        shadowRadius: 0,
-        transform: pressed
-          ? [{ translateX: 2 }, { translateY: 2 }]
-          : [{ translateX: 0 }, { translateY: 0 }],
+        opacity: isPast ? 0.8 : 1,
+        transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
       })}
     >
-      {/* Cover Image */}
-      <View style={{ height: 140, position: 'relative' }}>
-        <Image
-          source={{ uri: trip.coverImage || 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800' }}
-          style={{ width: '100%', height: '100%' }}
-          resizeMode="cover"
-        />
+      <Card variant="elevated" padding="none">
+        {/* Cover Image */}
+        <View style={{ height: 160, position: 'relative' }}>
+          <Image
+            source={{ uri: trip.coverImage || 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800' }}
+            style={{ width: '100%', height: '100%', borderTopLeftRadius: 24, borderTopRightRadius: 24 }}
+            resizeMode="cover"
+          />
 
-        {/* Status Badge */}
-        <View
-          style={{
+          {/* Gradient overlay */}
+          <View style={{
             position: 'absolute',
-            top: 12,
-            right: 12,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 80,
+            borderTopLeftRadius: 24,
+            borderTopRightRadius: 24,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+          }} />
+
+          {/* Status Badge */}
+          <View style={{
+            position: 'absolute',
+            top: 14,
+            right: 14,
             backgroundColor: status.bg,
-            borderWidth: 2,
-            borderColor: '#000000',
             paddingHorizontal: 12,
-            paddingVertical: 4,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 11,
-              fontWeight: '700',
+            paddingVertical: 5,
+            borderRadius: 10,
+          }}>
+            <Text style={{
+              fontSize: 12,
+              fontWeight: '600',
               color: status.text,
-              letterSpacing: 1,
-            }}
-          >
-            {status.label}
-          </Text>
-        </View>
+            }}>
+              {status.label}
+            </Text>
+          </View>
 
-        {/* Countdown */}
-        {timeUntil && !isPast && (
-          <View
-            style={{
+          {/* Countdown */}
+          {timeUntil && !isPast && (
+            <View style={{
               position: 'absolute',
-              bottom: 12,
-              left: 12,
-              backgroundColor: '#FFFFFF',
-              borderWidth: 2,
-              borderColor: '#000000',
+              bottom: 14,
+              left: 14,
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
               paddingHorizontal: 12,
-              paddingVertical: 4,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: '700',
-                color: '#000000',
-              }}
-            >
-              {timeUntil}
-            </Text>
-          </View>
-        )}
-      </View>
+              paddingVertical: 6,
+              borderRadius: 10,
+            }}>
+              <Text style={{
+                fontSize: 13,
+                fontWeight: '600',
+                color: COLORS.ink[900],
+              }}>
+                {timeUntil}
+              </Text>
+            </View>
+          )}
+        </View>
 
-      {/* Content */}
-      <View style={{ padding: 16 }}>
-        <Text
-          style={{
+        {/* Content */}
+        <View style={{ padding: 18 }}>
+          <Text style={{
             fontSize: 20,
-            fontWeight: '800',
-            color: '#000000',
-            textTransform: 'uppercase',
+            fontWeight: '700',
+            color: COLORS.ink[900],
             marginBottom: 4,
-          }}
-        >
-          {trip.name}
-        </Text>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-          <Text style={{ fontSize: 16, marginRight: 6 }}>
-            {getFlagEmoji(trip.destination.countryCode)}
+            letterSpacing: -0.3,
+          }}>
+            {trip.name}
           </Text>
-          <Text style={{ fontSize: 14, color: '#737373', fontWeight: '600' }}>
-            {trip.destination.city}, {trip.destination.country}
-          </Text>
-        </View>
 
-        {/* Divider */}
-        <View style={{ height: 2, backgroundColor: '#000000', marginBottom: 12 }} />
-
-        {/* Trip Details */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="calendar" size={16} color="#000000" />
-            <Text style={{ fontSize: 12, color: '#000000', fontWeight: '600', marginLeft: 6 }}>
-              {trip.startDate
-                ? format(trip.startDate, 'MMM d')
-                : 'TBD'}
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 14 }}>
+            <Text style={{ fontSize: 18, marginRight: 8 }}>
+              {getFlagEmoji(trip.destination.countryCode)}
+            </Text>
+            <Text style={{ fontSize: 15, color: COLORS.stone[500], fontWeight: '500' }}>
+              {trip.destination.city}, {trip.destination.country}
             </Text>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="time" size={16} color="#000000" />
-            <Text style={{ fontSize: 12, color: '#000000', fontWeight: '600', marginLeft: 6 }}>
-              {totalDays ? `${totalDays} DAYS` : 'TBD'}
-            </Text>
-          </View>
+          {/* Trip Details */}
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingTop: 14,
+            borderTopWidth: 1,
+            borderTopColor: COLORS.stone[200],
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{
+                width: 36,
+                height: 36,
+                backgroundColor: COLORS.terracotta[50],
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 8,
+              }}>
+                <Ionicons name="calendar-outline" size={18} color={COLORS.terracotta[500]} />
+              </View>
+              <Text style={{ fontSize: 14, color: COLORS.stone[700], fontWeight: '500' }}>
+                {trip.startDate
+                  ? format(trip.startDate, 'MMM d')
+                  : 'TBD'}
+              </Text>
+            </View>
 
-          {/* Travelers */}
-          <View style={{ flexDirection: 'row' }}>
-            {trip.travelers.slice(0, 3).map((traveler, index) => (
-              <View
-                key={traveler.id}
-                style={{
-                  marginLeft: index > 0 ? -8 : 0,
-                  width: 28,
-                  height: 28,
-                  borderRadius: 14,
-                  borderWidth: 2,
-                  borderColor: '#000000',
-                  backgroundColor: '#FACC15',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text style={{ fontSize: 10, fontWeight: '700', color: '#000000' }}>
-                  {traveler.name.charAt(0).toUpperCase()}
-                </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{
+                width: 36,
+                height: 36,
+                backgroundColor: COLORS.forest[50],
+                borderRadius: 10,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 8,
+              }}>
+                <Ionicons name="time-outline" size={18} color={COLORS.forest[500]} />
               </View>
-            ))}
-            {trip.travelers.length > 3 && (
-              <View
-                style={{
-                  marginLeft: -8,
-                  width: 28,
-                  height: 28,
-                  borderRadius: 14,
-                  borderWidth: 2,
-                  borderColor: '#000000',
-                  backgroundColor: '#000000',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text style={{ fontSize: 10, fontWeight: '700', color: '#FFFFFF' }}>
-                  +{trip.travelers.length - 3}
-                </Text>
-              </View>
-            )}
+              <Text style={{ fontSize: 14, color: COLORS.stone[700], fontWeight: '500' }}>
+                {totalDays ? `${totalDays} days` : 'TBD'}
+              </Text>
+            </View>
+
+            {/* Travelers */}
+            <View style={{ flexDirection: 'row' }}>
+              {trip.travelers.slice(0, 3).map((traveler, index) => (
+                <View
+                  key={traveler.id}
+                  style={{
+                    marginLeft: index > 0 ? -10 : 0,
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF',
+                    backgroundColor: COLORS.terracotta[100],
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.terracotta[600] }}>
+                    {traveler.name.charAt(0).toUpperCase()}
+                  </Text>
+                </View>
+              ))}
+              {trip.travelers.length > 3 && (
+                <View
+                  style={{
+                    marginLeft: -10,
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF',
+                    backgroundColor: COLORS.stone[700],
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={{ fontSize: 11, fontWeight: '600', color: '#FFFFFF' }}>
+                    +{trip.travelers.length - 3}
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
         </View>
-      </View>
+      </Card>
     </Pressable>
   );
 }

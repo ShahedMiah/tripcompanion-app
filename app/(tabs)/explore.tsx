@@ -6,6 +6,42 @@ import { Ionicons } from '@expo/vector-icons';
 import { Card, Badge } from '@/components/ui';
 import * as Haptics from 'expo-haptics';
 
+/**
+ * WAYFARE Explore Screen - Bento Editorial Design
+ *
+ * Warm editorial aesthetic with terracotta accents.
+ * Destination inspiration with category browsing.
+ */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    50: '#FEF7F4',
+    100: '#FCEEE8',
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    50: '#F0F5F2',
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  amber: {
+    500: '#D4A574',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
+
 const popularDestinations = [
   {
     id: '1',
@@ -46,11 +82,11 @@ const popularDestinations = [
 ];
 
 const categories = [
-  { id: 'beach', icon: 'sunny', label: 'Beach', color: '#F59E0B' },
+  { id: 'beach', icon: 'sunny', label: 'Beach', color: COLORS.amber[500] },
   { id: 'culture', icon: 'library', label: 'Culture', color: '#8B5CF6' },
-  { id: 'adventure', icon: 'compass', label: 'Adventure', color: '#0D9488' },
+  { id: 'adventure', icon: 'compass', label: 'Adventure', color: COLORS.terracotta[500] },
   { id: 'food', icon: 'restaurant', label: 'Food', color: '#F06449' },
-  { id: 'nature', icon: 'leaf', label: 'Nature', color: '#10B981' },
+  { id: 'nature', icon: 'leaf', label: 'Nature', color: COLORS.forest[500] },
   { id: 'city', icon: 'business', label: 'City', color: '#3B82F6' },
 ];
 
@@ -60,7 +96,6 @@ export default function ExploreScreen() {
 
   const handleDestinationPress = (destination: typeof popularDestinations[0]) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    // Navigate to new trip with pre-filled destination
     router.push({
       pathname: '/trip/new',
       params: {
@@ -72,54 +107,82 @@ export default function ExploreScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-slate-50" edges={['top']}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.cream }} edges={['top']}>
       {/* Header */}
-      <View className="px-6 pt-4 pb-4">
-        <Text className="text-2xl font-bold text-slate-900 mb-1">
+      <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 16 }}>
+        <Text style={{ fontSize: 28, fontWeight: '700', color: COLORS.ink[900], letterSpacing: -0.5 }}>
           Explore
         </Text>
-        <Text className="text-slate-500">
+        <Text style={{ color: COLORS.stone[500], marginTop: 4, fontSize: 15 }}>
           Find inspiration for your next adventure
         </Text>
       </View>
 
       {/* Search Bar */}
-      <View className="px-5 mb-4">
-        <View className="bg-white rounded-2xl px-4 py-3 flex-row items-center border border-slate-200">
-          <Ionicons name="search" size={20} color="#94A3B8" />
+      <View style={{ paddingHorizontal: 20, marginBottom: 16 }}>
+        <View style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderWidth: 1,
+          borderColor: COLORS.stone[200],
+        }}>
+          <Ionicons name="search" size={20} color={COLORS.stone[500]} />
           <TextInput
             placeholder="Search destinations..."
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={COLORS.stone[500]}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            className="flex-1 ml-3 text-base text-slate-900"
+            style={{ flex: 1, marginLeft: 12, fontSize: 16, color: COLORS.ink[900] }}
           />
         </View>
       </View>
 
       <ScrollView
-        className="flex-1"
+        style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
       >
         {/* Categories */}
-        <View className="mb-6">
-          <Text className="text-lg font-bold text-slate-900 px-5 mb-4">
+        <View style={{ marginBottom: 24 }}>
+          <Text style={{
+            fontSize: 12,
+            fontWeight: '600',
+            color: COLORS.ink[900],
+            paddingHorizontal: 24,
+            marginBottom: 16,
+            letterSpacing: 0.5,
+            textTransform: 'uppercase',
+          }}>
             Browse by category
           </Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 20 }}
+            contentContainerStyle={{ paddingHorizontal: 24 }}
           >
             {categories.map((category) => (
               <Pressable
                 key={category.id}
                 onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-                className="items-center mr-5 active:opacity-80"
+                style={({ pressed }) => ({
+                  alignItems: 'center',
+                  marginRight: 20,
+                  opacity: pressed ? 0.8 : 1,
+                })}
               >
                 <View
-                  className="w-16 h-16 rounded-2xl items-center justify-center mb-2"
-                  style={{ backgroundColor: `${category.color}15` }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 8,
+                    backgroundColor: `${category.color}15`,
+                  }}
                 >
                   <Ionicons
                     name={category.icon as any}
@@ -127,7 +190,7 @@ export default function ExploreScreen() {
                     color={category.color}
                   />
                 </View>
-                <Text className="text-slate-600 font-medium text-sm">
+                <Text style={{ color: COLORS.stone[700], fontWeight: '500', fontSize: 13 }}>
                   {category.label}
                 </Text>
               </Pressable>
@@ -136,13 +199,13 @@ export default function ExploreScreen() {
         </View>
 
         {/* Popular Destinations */}
-        <View className="px-5 pb-8">
-          <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-lg font-bold text-slate-900">
+        <View style={{ paddingHorizontal: 20, paddingBottom: 32 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, paddingHorizontal: 4 }}>
+            <Text style={{ fontSize: 12, fontWeight: '600', color: COLORS.ink[900], letterSpacing: 0.5, textTransform: 'uppercase' }}>
               Popular destinations
             </Text>
             <Pressable>
-              <Text className="text-primary-600 font-semibold">See all</Text>
+              <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', fontSize: 13 }}>See all</Text>
             </Pressable>
           </View>
 
@@ -150,41 +213,59 @@ export default function ExploreScreen() {
             <Pressable
               key={destination.id}
               onPress={() => handleDestinationPress(destination)}
-              className="mb-4 active:scale-[0.98] active:opacity-90"
+              style={({ pressed }) => ({
+                marginBottom: 16,
+                transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
+                opacity: pressed ? 0.9 : 1,
+              })}
             >
               <Card variant="elevated" padding="none">
-                <View className="flex-row">
+                <View style={{ flexDirection: 'row' }}>
                   <Image
                     source={{ uri: destination.image }}
-                    className="w-28 h-28 rounded-l-3xl"
+                    style={{ width: 110, height: 110, borderTopLeftRadius: 24, borderBottomLeftRadius: 24 }}
                     resizeMode="cover"
                   />
-                  <View className="flex-1 p-4 justify-center">
-                    <Text className="text-lg font-bold text-slate-900">
+                  <View style={{ flex: 1, padding: 16, justifyContent: 'center' }}>
+                    <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.ink[900], letterSpacing: -0.3 }}>
                       {destination.city}
                     </Text>
-                    <Text className="text-slate-500 text-sm mb-2">
+                    <Text style={{ color: COLORS.stone[500], fontSize: 14, marginBottom: 6 }}>
                       {destination.country}
                     </Text>
-                    <Text className="text-slate-400 text-sm mb-3" numberOfLines={1}>
+                    <Text style={{ color: COLORS.stone[500], fontSize: 13, marginBottom: 10 }} numberOfLines={1}>
                       {destination.description}
                     </Text>
-                    <View className="flex-row flex-wrap">
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                       {destination.tags.map((tag) => (
                         <View
                           key={tag}
-                          className="bg-slate-100 rounded-full px-2.5 py-1 mr-1.5 mb-1"
+                          style={{
+                            backgroundColor: COLORS.stone[100],
+                            borderRadius: 8,
+                            paddingHorizontal: 10,
+                            paddingVertical: 4,
+                            marginRight: 6,
+                            marginBottom: 4,
+                          }}
                         >
-                          <Text className="text-slate-600 text-xs font-medium">
+                          <Text style={{ color: COLORS.stone[700], fontSize: 11, fontWeight: '600' }}>
                             {tag}
                           </Text>
                         </View>
                       ))}
                     </View>
                   </View>
-                  <View className="justify-center pr-4">
-                    <View className="w-8 h-8 bg-primary-50 rounded-full items-center justify-center">
-                      <Ionicons name="arrow-forward" size={16} color="#0D9488" />
+                  <View style={{ justifyContent: 'center', paddingRight: 16 }}>
+                    <View style={{
+                      width: 36,
+                      height: 36,
+                      backgroundColor: COLORS.terracotta[50],
+                      borderRadius: 12,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <Ionicons name="arrow-forward" size={18} color={COLORS.terracotta[500]} />
                     </View>
                   </View>
                 </View>
@@ -194,24 +275,41 @@ export default function ExploreScreen() {
         </View>
 
         {/* Inspiration Section */}
-        <View className="px-5 pb-8">
+        <View style={{ paddingHorizontal: 20, paddingBottom: 32 }}>
           <Card variant="filled" padding="lg">
-            <View className="flex-row items-center mb-3">
-              <View className="w-10 h-10 bg-primary-500 rounded-xl items-center justify-center mr-3">
-                <Ionicons name="sparkles" size={20} color="white" />
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+              <View style={{
+                width: 44,
+                height: 44,
+                backgroundColor: COLORS.terracotta[500],
+                borderRadius: 14,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 14,
+              }}>
+                <Ionicons name="sparkles" size={22} color="white" />
               </View>
-              <Text className="text-lg font-bold text-slate-900">
+              <Text style={{ fontSize: 18, fontWeight: '700', color: COLORS.ink[900], letterSpacing: -0.3 }}>
                 Need inspiration?
               </Text>
             </View>
-            <Text className="text-slate-500 mb-4">
+            <Text style={{ color: COLORS.stone[500], marginBottom: 16, lineHeight: 22, fontSize: 15 }}>
               Tell our AI what kind of trip you're dreaming about and we'll suggest the perfect destination.
             </Text>
             <Pressable
               onPress={() => router.push('/trip/new')}
-              className="bg-primary-600 rounded-xl py-3 px-5 flex-row items-center justify-center active:bg-primary-700"
+              style={({ pressed }) => ({
+                backgroundColor: COLORS.forest[700],
+                borderRadius: 14,
+                paddingVertical: 14,
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: pressed ? 0.9 : 1,
+              })}
             >
-              <Text className="text-white font-semibold mr-2">
+              <Text style={{ color: '#FFFFFF', fontWeight: '600', marginRight: 8, fontSize: 15 }}>
                 Let AI suggest a trip
               </Text>
               <Ionicons name="arrow-forward" size={18} color="white" />

@@ -5,6 +5,40 @@ import { format, differenceInDays } from 'date-fns';
 import { getTripById, getItineraryForTrip, getExpensesForTrip, calculateBalances } from '@/lib/mock-data';
 import { Card, Badge, Avatar } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
+import * as Haptics from 'expo-haptics';
+
+/**
+ * WAYFARE Trip Overview - Bento Editorial Design
+ *
+ * Warm editorial aesthetic with terracotta accents.
+ * Bento grid layout with asymmetric cards.
+ */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    50: '#FEF7F4',
+    100: '#FCEEE8',
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    50: '#F0F5F2',
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
 
 export default function TripOverviewScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -28,30 +62,42 @@ export default function TripOverviewScreen() {
   const balances = calculateBalances(expenses);
 
   const quickStats = [
-    { icon: 'calendar', value: `${totalDays}`, label: 'Days', color: '#0D9488' },
-    { icon: 'compass', value: `${totalActivities}`, label: 'Activities', color: '#F06449' },
-    { icon: 'wallet', value: formatCurrency(totalExpenses), label: 'Total', color: '#D4A574' },
+    { icon: 'calendar', value: `${totalDays}`, label: 'Days', color: COLORS.terracotta[500] },
+    { icon: 'compass', value: `${totalActivities}`, label: 'Activities', color: COLORS.forest[500] },
+    { icon: 'wallet', value: formatCurrency(totalExpenses), label: 'Total', color: COLORS.stone[700] },
   ];
 
   return (
-    <ScrollView className="flex-1 bg-slate-50" showsVerticalScrollIndicator={false}>
-      <View className="px-5 py-6">
-        {/* Quick Stats */}
-        <View className="flex-row -mx-1.5 mb-6">
+    <ScrollView
+      style={{ flex: 1, backgroundColor: COLORS.cream }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={{ paddingHorizontal: 20, paddingVertical: 24 }}>
+        {/* Quick Stats - Bento Grid */}
+        <View style={{ flexDirection: 'row', marginHorizontal: -6, marginBottom: 20 }}>
           {quickStats.map((stat) => (
-            <View key={stat.label} className="flex-1 px-1.5">
+            <View key={stat.label} style={{ flex: 1, paddingHorizontal: 6 }}>
               <Card variant="elevated" padding="md">
-                <View className="items-center">
+                <View style={{ alignItems: 'center' }}>
                   <View
-                    className="w-10 h-10 rounded-xl items-center justify-center mb-2"
-                    style={{ backgroundColor: `${stat.color}15` }}
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: 14,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: 10,
+                      backgroundColor: `${stat.color}15`,
+                    }}
                   >
                     <Ionicons name={stat.icon as any} size={22} color={stat.color} />
                   </View>
-                  <Text className="text-xl font-bold text-slate-900">
+                  <Text style={{ fontSize: 22, fontWeight: '700', color: COLORS.ink[900], letterSpacing: -0.5 }}>
                     {stat.value}
                   </Text>
-                  <Text className="text-slate-500 text-sm">{stat.label}</Text>
+                  <Text style={{ fontSize: 13, color: COLORS.stone[500], marginTop: 2 }}>
+                    {stat.label}
+                  </Text>
                 </View>
               </Card>
             </View>
@@ -59,8 +105,8 @@ export default function TripOverviewScreen() {
         </View>
 
         {/* Trip Details */}
-        <Card variant="elevated" className="mb-4">
-          <Text className="font-bold text-slate-900 mb-4 text-lg">
+        <Card variant="elevated" style={{ marginBottom: 16 }}>
+          <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 18, letterSpacing: -0.3 }}>
             Trip Details
           </Text>
 
@@ -77,14 +123,14 @@ export default function TripOverviewScreen() {
             icon="airplane"
             label="Flights"
             value={trip.hasFlights ? 'Booked' : 'Not booked'}
-            valueColor={trip.hasFlights ? 'text-emerald-600' : 'text-slate-500'}
+            valueColor={trip.hasFlights ? COLORS.forest[500] : COLORS.stone[500]}
             showCheck={trip.hasFlights}
           />
           <DetailRow
             icon="bed"
             label="Accommodation"
             value={trip.hasHotels ? 'Booked' : 'Not booked'}
-            valueColor={trip.hasHotels ? 'text-emerald-600' : 'text-slate-500'}
+            valueColor={trip.hasHotels ? COLORS.forest[500] : COLORS.stone[500]}
             showCheck={trip.hasHotels}
           />
           <DetailRow
@@ -99,36 +145,45 @@ export default function TripOverviewScreen() {
           />
         </Card>
 
-        {/* Travelers */}
-        <Card variant="elevated" className="mb-4">
-          <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-bold text-slate-900 text-lg">
+        {/* Travellers */}
+        <Card variant="elevated" style={{ marginBottom: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <Text style={{ fontWeight: '700', color: COLORS.ink[900], fontSize: 18, letterSpacing: -0.3 }}>
               Travellers ({trip.travelers.length})
             </Text>
-            <Pressable className="flex-row items-center">
-              <Text className="text-primary-600 font-semibold mr-1">Invite</Text>
-              <Ionicons name="add-circle" size={18} color="#0D9488" />
+            <Pressable
+              onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+            >
+              <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginRight: 4, fontSize: 14 }}>
+                Invite
+              </Text>
+              <Ionicons name="add-circle" size={18} color={COLORS.terracotta[500]} />
             </Pressable>
           </View>
 
           {trip.travelers.map((traveler, index) => (
             <View
               key={traveler.id}
-              className={`flex-row items-center py-3 ${
-                index < trip.travelers.length - 1 ? 'border-b border-slate-100' : ''
-              }`}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 14,
+                borderBottomWidth: index < trip.travelers.length - 1 ? 1 : 0,
+                borderBottomColor: COLORS.stone[200],
+              }}
             >
               <Avatar
                 source={traveler.avatarUrl}
                 name={traveler.name}
                 size="md"
               />
-              <View className="ml-3 flex-1">
-                <Text className="text-slate-900 font-semibold">
+              <View style={{ marginLeft: 14, flex: 1 }}>
+                <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 15 }}>
                   {traveler.name}
                 </Text>
                 {traveler.departureCity && (
-                  <Text className="text-slate-500 text-sm">
+                  <Text style={{ color: COLORS.stone[500], fontSize: 13, marginTop: 2 }}>
                     Flying from {traveler.departureCity}
                   </Text>
                 )}
@@ -142,19 +197,19 @@ export default function TripOverviewScreen() {
         </Card>
 
         {/* Expense Summary */}
-        <Card variant="elevated" className="mb-4">
-          <View className="flex-row items-center justify-between mb-4">
-            <Text className="font-bold text-slate-900 text-lg">
+        <Card variant="elevated" style={{ marginBottom: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+            <Text style={{ fontWeight: '700', color: COLORS.ink[900], fontSize: 18, letterSpacing: -0.3 }}>
               Expense Summary
             </Text>
             <Pressable onPress={() => router.push(`/trip/${id}/expenses`)}>
-              <Text className="text-primary-600 font-semibold">View all</Text>
+              <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', fontSize: 14 }}>View all</Text>
             </Pressable>
           </View>
 
-          <View className="bg-primary-50 rounded-2xl p-4 mb-4">
-            <Text className="text-primary-700 text-sm">Total group expenses</Text>
-            <Text className="text-3xl font-bold text-primary-900">
+          <View style={{ backgroundColor: COLORS.terracotta[50], borderRadius: 16, padding: 16, marginBottom: 16 }}>
+            <Text style={{ color: COLORS.terracotta[600], fontSize: 13, fontWeight: '500' }}>Total group expenses</Text>
+            <Text style={{ fontSize: 32, fontWeight: '700', color: COLORS.terracotta[600], marginTop: 4, letterSpacing: -1 }}>
               {formatCurrency(totalExpenses)}
             </Text>
           </View>
@@ -164,17 +219,19 @@ export default function TripOverviewScreen() {
             .map(([name, balance]) => (
               <View
                 key={name}
-                className="flex-row items-center justify-between py-2"
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 10 }}
               >
-                <Text className="text-slate-700">{name}</Text>
+                <Text style={{ color: COLORS.stone[700], fontSize: 15 }}>{name}</Text>
                 <Text
-                  className={`font-semibold ${
-                    balance > 0
-                      ? 'text-emerald-600'
+                  style={{
+                    fontWeight: '600',
+                    fontSize: 15,
+                    color: balance > 0
+                      ? COLORS.forest[500]
                       : balance < 0
-                      ? 'text-red-500'
-                      : 'text-slate-500'
-                  }`}
+                      ? '#DC2626'
+                      : COLORS.stone[500],
+                  }}
                 >
                   {balance > 0 ? 'gets back ' : balance < 0 ? 'owes ' : ''}
                   {formatCurrency(Math.abs(balance))}
@@ -184,9 +241,29 @@ export default function TripOverviewScreen() {
         </Card>
 
         {/* Share Button */}
-        <Pressable className="bg-white border border-slate-200 rounded-2xl p-4 flex-row items-center justify-center active:bg-slate-50">
-          <Ionicons name="share-outline" size={20} color="#0D9488" />
-          <Text className="text-primary-600 font-semibold ml-2">Share Trip</Text>
+        <Pressable
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+          style={({ pressed }) => ({
+            backgroundColor: '#FFFFFF',
+            borderWidth: 1,
+            borderColor: COLORS.stone[200],
+            borderRadius: 16,
+            padding: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: pressed ? 0.8 : 1,
+            shadowColor: '#1A1714',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.04,
+            shadowRadius: 8,
+            elevation: 2,
+          })}
+        >
+          <Ionicons name="share-outline" size={20} color={COLORS.terracotta[500]} />
+          <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+            Share Trip
+          </Text>
         </Pressable>
       </View>
     </ScrollView>
@@ -197,7 +274,7 @@ function DetailRow({
   icon,
   label,
   value,
-  valueColor = 'text-slate-900',
+  valueColor = COLORS.ink[900],
   showCheck = false,
   isLast = false,
 }: {
@@ -210,18 +287,29 @@ function DetailRow({
 }) {
   return (
     <View
-      className={`flex-row items-center py-3 ${
-        !isLast ? 'border-b border-slate-100' : ''
-      }`}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 14,
+        borderBottomWidth: !isLast ? 1 : 0,
+        borderBottomColor: COLORS.stone[200],
+      }}
     >
-      <View className="w-9 h-9 bg-slate-100 rounded-xl items-center justify-center">
-        <Ionicons name={icon as any} size={18} color="#64748B" />
+      <View style={{
+        width: 40,
+        height: 40,
+        backgroundColor: COLORS.stone[100],
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <Ionicons name={icon as any} size={18} color={COLORS.stone[500]} />
       </View>
-      <Text className="ml-3 text-slate-500 flex-1">{label}</Text>
-      <View className="flex-row items-center">
-        <Text className={`font-semibold ${valueColor}`}>{value}</Text>
+      <Text style={{ marginLeft: 14, color: COLORS.stone[500], flex: 1, fontSize: 15 }}>{label}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={{ fontWeight: '600', color: valueColor, fontSize: 15 }}>{value}</Text>
         {showCheck && (
-          <Ionicons name="checkmark-circle" size={18} color="#059669" className="ml-1" />
+          <Ionicons name="checkmark-circle" size={18} color={COLORS.forest[500]} style={{ marginLeft: 6 }} />
         )}
       </View>
     </View>

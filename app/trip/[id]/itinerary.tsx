@@ -10,6 +10,46 @@ import { activityColors, activityIcons, weatherConfig } from '@/constants/theme'
 import { formatCurrency, formatDuration } from '@/lib/utils';
 import * as Haptics from 'expo-haptics';
 
+/**
+ * WAYFARE Itinerary Screen - Bento Editorial Design
+ *
+ * Warm editorial aesthetic with terracotta accents.
+ * Day-by-day timeline with activity cards.
+ */
+
+// Bento Editorial colour palette
+const COLORS = {
+  cream: '#FFFBF5',
+  terracotta: {
+    50: '#FEF7F4',
+    100: '#FCEEE8',
+    500: '#C4704A',
+    600: '#A85A38',
+  },
+  forest: {
+    50: '#F0F5F2',
+    100: '#E0EBE4',
+    500: '#4A7B5A',
+    700: '#2D4739',
+  },
+  amber: {
+    50: '#FFFBEB',
+    100: '#FEF3C7',
+    500: '#D4A574',
+    700: '#B8860B',
+  },
+  stone: {
+    100: '#F5F3F0',
+    200: '#E8E4DE',
+    300: '#D5CFC6',
+    500: '#968B7D',
+    700: '#5C5147',
+  },
+  ink: {
+    900: '#1A1A1A',
+  },
+};
+
 export default function ItineraryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -20,7 +60,7 @@ export default function ItineraryScreen() {
 
   if (!trip || itinerary.length === 0) {
     return (
-      <View className="flex-1 bg-slate-50">
+      <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
         <EmptyState
           icon="calendar-outline"
           title="No itinerary yet"
@@ -38,33 +78,45 @@ export default function ItineraryScreen() {
   };
 
   return (
-    <View className="flex-1 bg-slate-50">
+    <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
       {/* Day Selector */}
-      <View className="bg-white border-b border-slate-100">
+      <View style={{ backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderBottomColor: COLORS.stone[200] }}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
         >
           {itinerary.map((day, index) => (
             <Pressable
               key={day.id}
               onPress={() => handleDaySelect(index)}
-              className={`mr-2 px-4 py-2.5 rounded-2xl ${
-                selectedDayIndex === index ? 'bg-primary-500' : 'bg-slate-100'
-              }`}
+              style={({ pressed }) => ({
+                marginRight: 10,
+                paddingHorizontal: 18,
+                paddingVertical: 12,
+                borderRadius: 16,
+                backgroundColor: selectedDayIndex === index ? COLORS.terracotta[500] : COLORS.stone[100],
+                opacity: pressed ? 0.8 : 1,
+              })}
             >
               <Text
-                className={`text-xs font-medium ${
-                  selectedDayIndex === index ? 'text-primary-100' : 'text-slate-500'
-                }`}
+                style={{
+                  fontSize: 11,
+                  fontWeight: '600',
+                  letterSpacing: 0.5,
+                  color: selectedDayIndex === index ? 'rgba(255,255,255,0.8)' : COLORS.stone[500],
+                  textTransform: 'uppercase',
+                }}
               >
                 Day {day.dayNumber}
               </Text>
               <Text
-                className={`font-bold ${
-                  selectedDayIndex === index ? 'text-white' : 'text-slate-700'
-                }`}
+                style={{
+                  fontSize: 15,
+                  fontWeight: '700',
+                  color: selectedDayIndex === index ? '#FFFFFF' : COLORS.ink[900],
+                  marginTop: 2,
+                }}
               >
                 {format(day.date, 'EEE d')}
               </Text>
@@ -76,7 +128,7 @@ export default function ItineraryScreen() {
       {/* Day Content */}
       <ScrollView
         ref={scrollRef}
-        className="flex-1"
+        style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 20 }}
       >
@@ -85,16 +137,23 @@ export default function ItineraryScreen() {
 
         {/* Day Notes */}
         {selectedDay.notes && (
-          <View className="bg-primary-50 rounded-2xl p-4 mb-4 flex-row items-start">
-            <Ionicons name="information-circle" size={20} color="#0D9488" />
-            <Text className="text-primary-700 ml-3 flex-1 leading-relaxed">
+          <View style={{
+            backgroundColor: COLORS.terracotta[50],
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 16,
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+          }}>
+            <Ionicons name="information-circle" size={20} color={COLORS.terracotta[500]} />
+            <Text style={{ color: COLORS.terracotta[600], marginLeft: 12, flex: 1, lineHeight: 22, fontSize: 14 }}>
               {selectedDay.notes}
             </Text>
           </View>
         )}
 
         {/* Activities Timeline */}
-        <View className="mt-2">
+        <View style={{ marginTop: 8 }}>
           {selectedDay.activities
             .sort((a, b) => a.order - b.order)
             .map((activity, index) => (
@@ -110,10 +169,23 @@ export default function ItineraryScreen() {
         {/* Add Activity Button */}
         <Pressable
           onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-          className="mt-4 border-2 border-dashed border-slate-300 rounded-2xl p-5 flex-row items-center justify-center active:bg-slate-50"
+          style={({ pressed }) => ({
+            marginTop: 16,
+            borderWidth: 2,
+            borderStyle: 'dashed',
+            borderColor: COLORS.stone[300],
+            borderRadius: 16,
+            padding: 20,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
+          })}
         >
-          <Ionicons name="add-circle-outline" size={24} color="#94A3B8" />
-          <Text className="text-slate-500 font-semibold ml-2">Add Activity</Text>
+          <Ionicons name="add-circle-outline" size={24} color={COLORS.stone[500]} />
+          <Text style={{ color: COLORS.stone[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+            Add Activity
+          </Text>
         </Pressable>
       </ScrollView>
     </View>
@@ -126,32 +198,40 @@ function WeatherCard({ weather }: { weather: ItineraryDay['weather'] }) {
   const config = weatherConfig[weather.condition];
 
   return (
-    <Card variant="elevated" padding="md" className="mb-4">
-      <View className="flex-row items-center">
+    <Card variant="elevated" padding="md" style={{ marginBottom: 16 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
-          className="w-14 h-14 rounded-2xl items-center justify-center"
-          style={{ backgroundColor: `${config.color}15` }}
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 16,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: `${config.color}15`,
+          }}
         >
           <Ionicons name={config.icon as any} size={28} color={config.color} />
         </View>
-        <View className="ml-4 flex-1">
-          <Text className="text-slate-900 font-bold text-lg capitalize">
+        <View style={{ marginLeft: 16, flex: 1 }}>
+          <Text style={{ color: COLORS.ink[900], fontWeight: '700', fontSize: 17, textTransform: 'capitalize' }}>
             {weather.condition}
           </Text>
-          <Text className="text-slate-500">
+          <Text style={{ color: COLORS.stone[500], fontSize: 14, marginTop: 2 }}>
             {weather.highTemp}° / {weather.lowTemp}°C
           </Text>
         </View>
-        <View className="items-end">
-          <View className="flex-row items-center mb-1">
-            <Ionicons name="water-outline" size={14} color="#64748B" />
-            <Text className="text-slate-500 text-sm ml-1">
+        <View style={{ alignItems: 'flex-end' }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+            <Ionicons name="water-outline" size={14} color={COLORS.stone[500]} />
+            <Text style={{ color: COLORS.stone[500], fontSize: 13, marginLeft: 4 }}>
               {weather.precipitation}%
             </Text>
           </View>
-          <View className="flex-row items-center">
-            <Ionicons name="water" size={14} color="#64748B" />
-            <Text className="text-slate-500 text-sm ml-1">{weather.humidity}%</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="water" size={14} color={COLORS.stone[500]} />
+            <Text style={{ color: COLORS.stone[500], fontSize: 13, marginLeft: 4 }}>
+              {weather.humidity}%
+            </Text>
           </View>
         </View>
       </View>
@@ -172,33 +252,45 @@ function ActivityCard({
   const icon = activityIcons[activity.type] || activityIcons.other;
 
   const statusConfig = {
-    suggested: { bg: 'bg-slate-100', text: 'text-slate-600', label: 'Suggested' },
-    planned: { bg: 'bg-amber-100', text: 'text-amber-700', label: 'Planned' },
-    booked: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Booked' },
-    completed: { bg: 'bg-primary-100', text: 'text-primary-700', label: 'Done' },
+    suggested: { bg: COLORS.stone[100], text: COLORS.stone[700], label: 'Suggested' },
+    planned: { bg: COLORS.amber[100], text: COLORS.amber[700], label: 'Planned' },
+    booked: { bg: COLORS.forest[100], text: COLORS.forest[700], label: 'Booked' },
+    completed: { bg: COLORS.terracotta[100], text: COLORS.terracotta[600], label: 'Done' },
   };
 
   const status = statusConfig[activity.bookingStatus];
 
   return (
-    <View className="flex-row">
+    <View style={{ flexDirection: 'row' }}>
       {/* Timeline */}
-      <View className="items-center mr-4">
+      <View style={{ alignItems: 'center', marginRight: 16 }}>
         <View
-          className="w-11 h-11 rounded-2xl items-center justify-center"
-          style={{ backgroundColor: `${color}20` }}
+          style={{
+            width: 44,
+            height: 44,
+            borderRadius: 14,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: `${color}20`,
+          }}
         >
           <Ionicons name={icon as any} size={22} color={color} />
         </View>
-        {!isLast && <View className="w-0.5 flex-1 bg-slate-200 my-2" />}
+        {!isLast && <View style={{ width: 2, flex: 1, backgroundColor: COLORS.stone[200], marginVertical: 8 }} />}
       </View>
 
       {/* Content */}
-      <Pressable onPress={onPress} className="flex-1 mb-4 active:opacity-80">
+      <Pressable
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          onPress();
+        }}
+        style={({ pressed }) => ({ flex: 1, marginBottom: 16, opacity: pressed ? 0.9 : 1 })}
+      >
         <Card variant="elevated" padding="md">
           {/* Time */}
           {activity.startTime && (
-            <Text className="text-sm text-slate-500 mb-1.5">
+            <Text style={{ fontSize: 13, color: COLORS.stone[500], marginBottom: 6 }}>
               {format(activity.startTime, 'h:mm a')}
               {activity.endTime && ` - ${format(activity.endTime, 'h:mm a')}`}
               {activity.duration &&
@@ -208,12 +300,12 @@ function ActivityCard({
           )}
 
           {/* Title & Status */}
-          <View className="flex-row items-start justify-between">
-            <Text className="text-base font-bold text-slate-900 flex-1 mr-2">
+          <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.ink[900], flex: 1, marginRight: 8, letterSpacing: -0.2 }}>
               {activity.title}
             </Text>
-            <View className={`px-2.5 py-1 rounded-full ${status.bg}`}>
-              <Text className={`text-xs font-semibold ${status.text}`}>
+            <View style={{ backgroundColor: status.bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 }}>
+              <Text style={{ fontSize: 11, fontWeight: '600', color: status.text }}>
                 {status.label}
               </Text>
             </View>
@@ -221,43 +313,53 @@ function ActivityCard({
 
           {/* Description */}
           {activity.description && (
-            <Text className="text-slate-600 text-sm mt-1.5 leading-relaxed" numberOfLines={2}>
+            <Text
+              style={{ color: COLORS.stone[500], fontSize: 14, marginTop: 6, lineHeight: 20 }}
+              numberOfLines={2}
+            >
               {activity.description}
             </Text>
           )}
 
           {/* Location */}
           {activity.location && (
-            <View className="flex-row items-center mt-3">
-              <Ionicons name="location-outline" size={14} color="#94A3B8" />
-              <Text className="text-slate-500 text-sm ml-1" numberOfLines={1}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+              <Ionicons name="location-outline" size={14} color={COLORS.stone[500]} />
+              <Text style={{ color: COLORS.stone[500], fontSize: 13, marginLeft: 4 }} numberOfLines={1}>
                 {activity.location.name}
               </Text>
             </View>
           )}
 
           {/* Footer */}
-          <View className="flex-row items-center justify-between mt-3 pt-3 border-t border-slate-100">
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: 12,
+            paddingTop: 12,
+            borderTopWidth: 1,
+            borderTopColor: COLORS.stone[200],
+          }}>
             {activity.estimatedCost && (
-              <Text className="text-slate-700 font-semibold">
+              <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 14 }}>
                 {formatCurrency(activity.estimatedCost.amount)}
               </Text>
             )}
 
             {activity.alternatives && activity.alternatives.length > 0 && (
-              <View className="flex-row items-center">
-                <Ionicons name="swap-horizontal" size={14} color="#0D9488" />
-                <Text className="text-primary-600 text-sm font-medium ml-1">
-                  {activity.alternatives.length} alt
-                  {activity.alternatives.length > 1 ? 's' : ''}
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="swap-horizontal" size={14} color={COLORS.terracotta[500]} />
+                <Text style={{ color: COLORS.terracotta[500], fontSize: 13, fontWeight: '500', marginLeft: 4 }}>
+                  {activity.alternatives.length} alt{activity.alternatives.length > 1 ? 's' : ''}
                 </Text>
               </View>
             )}
 
             {activity.bookingReference && (
-              <View className="flex-row items-center">
-                <Ionicons name="ticket-outline" size={14} color="#059669" />
-                <Text className="text-emerald-600 text-sm font-medium ml-1">
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="ticket-outline" size={14} color={COLORS.forest[500]} />
+                <Text style={{ color: COLORS.forest[500], fontSize: 13, fontWeight: '500', marginLeft: 4 }}>
                   {activity.bookingReference}
                 </Text>
               </View>
