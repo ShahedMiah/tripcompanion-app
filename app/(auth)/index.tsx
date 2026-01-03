@@ -110,7 +110,7 @@ export default function WelcomeScreen() {
           </Text>
 
           {/* Feature List - Editorial style */}
-          <View style={{ marginTop: 40 }}>
+          <View style={{ marginTop: 32 }}>
             {[
               { icon: 'sparkles', label: 'AI-powered itineraries' },
               { icon: 'wallet-outline', label: 'Expense tracking' },
@@ -122,7 +122,7 @@ export default function WelcomeScreen() {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginBottom: 16,
+                  marginBottom: 12,
                 }}
               >
                 <View style={{

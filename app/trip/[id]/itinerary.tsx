@@ -84,17 +84,17 @@ export default function ItineraryScreen() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16, gap: 12 }}
         >
           {itinerary.map((day, index) => (
             <Pressable
               key={day.id}
               onPress={() => handleDaySelect(index)}
               style={({ pressed }) => ({
-                marginRight: 10,
-                paddingHorizontal: 18,
-                paddingVertical: 12,
-                borderRadius: 16,
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+                borderRadius: 14,
+                minWidth: 72,
                 backgroundColor: selectedDayIndex === index ? COLORS.terracotta[500] : COLORS.stone[100],
                 opacity: pressed ? 0.8 : 1,
               })}

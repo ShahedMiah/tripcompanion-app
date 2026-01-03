@@ -169,15 +169,16 @@ export default function ExploreScreen() {
                 onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
                 style={({ pressed }) => ({
                   alignItems: 'center',
-                  marginRight: 20,
+                  width: 72,
+                  marginRight: 12,
                   opacity: pressed ? 0.8 : 1,
                 })}
               >
                 <View
                   style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: 20,
+                    width: 56,
+                    height: 56,
+                    borderRadius: 18,
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: 8,
@@ -186,11 +187,11 @@ export default function ExploreScreen() {
                 >
                   <Ionicons
                     name={category.icon as any}
-                    size={28}
+                    size={24}
                     color={category.color}
                   />
                 </View>
-                <Text style={{ color: COLORS.stone[700], fontWeight: '500', fontSize: 13 }}>
+                <Text style={{ color: COLORS.stone[700], fontWeight: '500', fontSize: 12, textAlign: 'center' }}>
                   {category.label}
                 </Text>
               </Pressable>

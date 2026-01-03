@@ -228,6 +228,11 @@ export default function LoginScreen() {
                   paddingVertical: 18,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  shadowColor: '#1A1714',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.15,
+                  shadowRadius: 12,
+                  elevation: 6,
                   opacity: loading ? 0.7 : pressed ? 0.9 : 1,
                   transform: pressed && !loading ? [{ scale: 0.98 }] : [{ scale: 1 }],
                 })}

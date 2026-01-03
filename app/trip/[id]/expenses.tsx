@@ -145,7 +145,7 @@ export default function ExpensesScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           style={{ marginTop: 20 }}
-          contentContainerStyle={{ paddingHorizontal: 20 }}
+          contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
         >
           <FilterChip
             label="All"
