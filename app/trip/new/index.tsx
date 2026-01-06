@@ -331,25 +331,28 @@ export default function NewTripScreen() {
             backgroundColor: canContinue ? COLORS.forest[700] : COLORS.stone[300],
             borderRadius: 16,
             paddingVertical: 16,
+            paddingHorizontal: 24,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
             opacity: pressed && canContinue ? 0.9 : 1,
           })}
         >
-          <Text style={{
-            color: canContinue ? '#FFFFFF' : COLORS.stone[500],
-            fontWeight: '600',
-            fontSize: 16,
-            marginRight: 8,
-          }}>
-            Continue
-          </Text>
-          <Ionicons
-            name="arrow-forward"
-            size={20}
-            color={canContinue ? '#FFFFFF' : COLORS.stone[500]}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{
+              color: canContinue ? '#FFFFFF' : COLORS.stone[500],
+              fontWeight: '600',
+              fontSize: 16,
+            }}>
+              Continue
+            </Text>
+            <Ionicons
+              name="arrow-forward"
+              size={20}
+              color={canContinue ? '#FFFFFF' : COLORS.stone[500]}
+              style={{ marginLeft: 8 }}
+            />
+          </View>
         </Pressable>
       </View>
     </SafeAreaView>

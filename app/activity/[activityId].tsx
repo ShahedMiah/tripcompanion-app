@@ -141,7 +141,7 @@ export default function ActivityDetailScreen() {
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <View style={{ padding: 20 }}>
           {/* Header Card */}
-          <Card variant="elevated" padding="lg">
+          <Card variant="outlined" padding="lg">
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <View style={{
                 width: 64,
@@ -193,7 +193,7 @@ export default function ActivityDetailScreen() {
           </Card>
 
           {/* Time & Duration */}
-          <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+          <Card variant="outlined" padding="lg" style={{ marginTop: 16 }}>
             <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
               Time & Duration
             </Text>
@@ -224,7 +224,7 @@ export default function ActivityDetailScreen() {
 
           {/* Location */}
           {activity.location && (
-            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+            <Card variant="outlined" padding="lg" style={{ marginTop: 16 }}>
               <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
                 Location
               </Text>
@@ -243,25 +243,24 @@ export default function ActivityDetailScreen() {
               <Pressable
                 onPress={handleOpenMaps}
                 style={({ pressed }) => ({
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   marginTop: 16,
                   paddingVertical: 12,
                   opacity: pressed ? 0.8 : 1,
                 })}
               >
-                <Ionicons name="navigate" size={18} color={COLORS.terracotta[500]} />
-                <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
-                  Open in Maps
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                  <Ionicons name="navigate" size={18} color={COLORS.terracotta[500]} />
+                  <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+                    Open in Maps
+                  </Text>
+                </View>
               </Pressable>
             </Card>
           )}
 
           {/* Cost */}
           {activity.estimatedCost && (
-            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+            <Card variant="outlined" padding="lg" style={{ marginTop: 16 }}>
               <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
                 Cost
               </Text>
@@ -283,7 +282,7 @@ export default function ActivityDetailScreen() {
 
           {/* Booking Info */}
           {(activity.bookingUrl || activity.bookingReference) && (
-            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+            <Card variant="outlined" padding="lg" style={{ marginTop: 16 }}>
               <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
                 Booking Information
               </Text>
@@ -317,16 +316,16 @@ export default function ActivityDetailScreen() {
                     borderColor: COLORS.terracotta[500],
                     borderRadius: 14,
                     paddingVertical: 14,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    paddingHorizontal: 20,
                     opacity: pressed ? 0.9 : 1,
                   })}
                 >
-                  <Ionicons name="open-outline" size={18} color={COLORS.terracotta[500]} />
-                  <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
-                    View Booking
-                  </Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <Ionicons name="open-outline" size={18} color={COLORS.terracotta[500]} />
+                    <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+                      View Booking
+                    </Text>
+                  </View>
                 </Pressable>
               )}
             </Card>
@@ -334,7 +333,7 @@ export default function ActivityDetailScreen() {
 
           {/* Notes */}
           {activity.notes && (
-            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+            <Card variant="outlined" padding="lg" style={{ marginTop: 16 }}>
               <Text style={{ fontWeight: '700', color: COLORS.ink[900], marginBottom: 16, fontSize: 17 }}>
                 Notes
               </Text>
@@ -355,7 +354,7 @@ export default function ActivityDetailScreen() {
 
           {/* Alternatives */}
           {activity.alternatives && activity.alternatives.length > 0 && (
-            <Card variant="elevated" padding="lg" style={{ marginTop: 16 }}>
+            <Card variant="outlined" padding="lg" style={{ marginTop: 16 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                 <Text style={{ fontWeight: '700', color: COLORS.ink[900], fontSize: 17 }}>
                   Alternatives

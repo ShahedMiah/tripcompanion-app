@@ -46,12 +46,12 @@ export default function WelcomeScreen() {
     <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
       <SafeAreaView style={{ flex: 1 }}>
         {/* Header - Logo */}
-        <View style={{ paddingHorizontal: 24, paddingTop: 32 }}>
+        <View style={{ paddingHorizontal: 24, paddingTop: 16 }}>
           <View style={{
-            width: 60,
-            height: 60,
+            width: 52,
+            height: 52,
             backgroundColor: COLORS.terracotta[500],
-            borderRadius: 18,
+            borderRadius: 16,
             alignItems: 'center',
             justifyContent: 'center',
             shadowColor: '#1A1714',
@@ -60,84 +60,86 @@ export default function WelcomeScreen() {
             shadowRadius: 12,
             elevation: 6,
           }}>
-            <Ionicons name="compass" size={30} color="#FFFFFF" />
+            <Ionicons name="compass" size={26} color="#FFFFFF" />
           </View>
         </View>
 
         {/* Main Content */}
-        <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 40 }}>
-          {/* Display Typography - Elegant, warm */}
-          <Text style={{
-            fontSize: 48,
-            fontWeight: '700',
-            color: COLORS.ink[900],
-            letterSpacing: -1.5,
-            lineHeight: 52,
-          }}>
-            Wayfare
-          </Text>
+        <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 20, justifyContent: 'space-between' }}>
+          <View>
+            {/* Display Typography - Hero title */}
+            <Text style={{
+              fontSize: 52,
+              fontWeight: '700',
+              color: COLORS.ink[900],
+              letterSpacing: -2,
+              lineHeight: 54,
+            }}>
+              Wayfare
+            </Text>
 
-          {/* Terracotta accent underline */}
-          <View style={{
-            width: 80,
-            height: 4,
-            backgroundColor: COLORS.terracotta[500],
-            borderRadius: 2,
-            marginTop: 12,
-            marginBottom: 24,
-          }} />
+            {/* Terracotta accent underline */}
+            <View style={{
+              width: 72,
+              height: 4,
+              backgroundColor: COLORS.terracotta[500],
+              borderRadius: 2,
+              marginTop: 10,
+              marginBottom: 20,
+            }} />
 
-          {/* Tagline - Warm, inviting */}
-          <Text style={{
-            fontSize: 26,
-            fontWeight: '600',
-            color: COLORS.ink[900],
-            lineHeight: 34,
-            marginBottom: 16,
-            letterSpacing: -0.3,
-          }}>
-            Travel planning,{'\n'}beautifully simple.
-          </Text>
+            {/* Tagline */}
+            <Text style={{
+              fontSize: 24,
+              fontWeight: '600',
+              color: COLORS.ink[900],
+              lineHeight: 32,
+              marginBottom: 12,
+              letterSpacing: -0.5,
+            }}>
+              Travel planning,{'\n'}beautifully simple.
+            </Text>
 
-          <Text style={{
-            fontSize: 17,
-            fontWeight: '400',
-            color: COLORS.stone[500],
-            lineHeight: 26,
-            maxWidth: 320,
-          }}>
-            AI-powered itineraries, shared expenses, and seamless group coordination — all in one place.
-          </Text>
+            <Text style={{
+              fontSize: 16,
+              fontWeight: '400',
+              color: COLORS.stone[500],
+              lineHeight: 24,
+              maxWidth: 320,
+            }}>
+              AI-powered itineraries, shared expenses, and seamless group coordination — all in one place.
+            </Text>
+          </View>
 
-          {/* Feature List - Editorial style */}
-          <View style={{ marginTop: 32 }}>
+          {/* Feature List - Positioned in middle */}
+          <View style={{ paddingTop: 8, paddingBottom: 24 }}>
             {[
               { icon: 'sparkles', label: 'AI-powered itineraries' },
               { icon: 'wallet-outline', label: 'Expense tracking' },
               { icon: 'people-outline', label: 'Group trips' },
               { icon: 'cloud-offline-outline', label: 'Offline access' },
-            ].map((feature, index) => (
+            ].map((feature, index, arr) => (
               <View
                 key={feature.label}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  marginBottom: 12,
+                  marginBottom: index === arr.length - 1 ? 0 : 12,
                 }}
               >
                 <View style={{
-                  width: 40,
-                  height: 40,
+                  width: 36,
+                  height: 36,
                   backgroundColor: COLORS.terracotta[50],
-                  borderRadius: 12,
+                  borderRadius: 10,
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginRight: 14,
                 }}>
-                  <Ionicons name={feature.icon as any} size={20} color={COLORS.terracotta[500]} />
+                  <Ionicons name={feature.icon as any} size={18} color={COLORS.terracotta[500]} />
                 </View>
                 <Text style={{
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: '500',
                   color: COLORS.stone[700],
                 }}>
@@ -149,7 +151,7 @@ export default function WelcomeScreen() {
         </View>
 
         {/* Bottom Actions */}
-        <View style={{ paddingHorizontal: 24, paddingBottom: 24 }}>
+        <View style={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 }}>
           {/* Primary CTA */}
           <Pressable
             onPress={() => {
@@ -174,34 +176,35 @@ export default function WelcomeScreen() {
           </Pressable>
 
           {/* Secondary CTA */}
-          <Pressable
-            onPress={() => router.push('/(auth)/login')}
-            style={({ pressed }) => ({
-              marginTop: 16,
-              paddingVertical: 14,
-              opacity: pressed ? 0.7 : 1,
-            })}
-          >
-            <Text style={{
-              textAlign: 'center',
-              color: COLORS.stone[700],
-              fontSize: 15,
-              fontWeight: '500',
-            }}>
-              Already have an account?{' '}
-              <Text style={{ color: COLORS.terracotta[500], fontWeight: '600' }}>Sign in</Text>
-            </Text>
-          </Pressable>
+          <View style={{ marginTop: 16 }}>
+            <Pressable
+              onPress={() => router.push('/(auth)/login')}
+              style={({ pressed }) => ({
+                paddingVertical: 8,
+                opacity: pressed ? 0.7 : 1,
+              })}
+            >
+              <Text style={{
+                textAlign: 'center',
+                color: COLORS.stone[600],
+                fontSize: 15,
+                fontWeight: '500',
+              }}>
+                Already have an account?{' '}
+                <Text style={{ color: COLORS.terracotta[500], fontWeight: '600' }}>Sign in</Text>
+              </Text>
+            </Pressable>
+          </View>
 
           {/* Divider */}
           <View style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginVertical: 24,
+            marginVertical: 12,
           }}>
             <View style={{ flex: 1, height: 1, backgroundColor: COLORS.stone[200] }} />
             <Text style={{
-              paddingHorizontal: 16,
+              paddingHorizontal: 14,
               color: COLORS.stone[500],
               fontSize: 13,
               fontWeight: '500',
@@ -211,8 +214,8 @@ export default function WelcomeScreen() {
             <View style={{ flex: 1, height: 1, backgroundColor: COLORS.stone[200] }} />
           </View>
 
-          {/* Social Login - Soft, rounded */}
-          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
+          {/* Social Login - Side by side square icons */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 12 }}>
             {/* Google */}
             <Pressable
               onPress={() => {
@@ -220,23 +223,22 @@ export default function WelcomeScreen() {
                 router.replace('/(tabs)');
               }}
               style={({ pressed }) => ({
-                flex: 1,
+                opacity: pressed ? 0.9 : 1,
+                transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
+              })}
+            >
+              <View style={{
+                width: 56,
                 height: 56,
                 backgroundColor: '#FFFFFF',
                 borderWidth: 1,
                 borderColor: COLORS.stone[200],
                 borderRadius: 16,
-                flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
-                opacity: pressed ? 0.9 : 1,
-                transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
-              })}
-            >
-              <Ionicons name="logo-google" size={22} color="#4285F4" />
-              <Text style={{ marginLeft: 10, color: COLORS.stone[700], fontWeight: '600', fontSize: 15 }}>
-                Google
-              </Text>
+              }}>
+                <Ionicons name="logo-google" size={24} color="#4285F4" />
+              </View>
             </Pressable>
 
             {/* Apple */}
@@ -246,21 +248,22 @@ export default function WelcomeScreen() {
                 router.replace('/(tabs)');
               }}
               style={({ pressed }) => ({
-                flex: 1,
-                height: 56,
-                backgroundColor: COLORS.ink[900],
-                borderRadius: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
                 opacity: pressed ? 0.9 : 1,
-                transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
+                transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
               })}
             >
-              <Ionicons name="logo-apple" size={22} color="#FFFFFF" />
-              <Text style={{ marginLeft: 10, color: '#FFFFFF', fontWeight: '600', fontSize: 15 }}>
-                Apple
-              </Text>
+              <View style={{
+                width: 56,
+                height: 56,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 1,
+                borderColor: COLORS.stone[200],
+                borderRadius: 16,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <Ionicons name="logo-apple" size={24} color="#000000" />
+              </View>
             </Pressable>
           </View>
         </View>

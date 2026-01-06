@@ -452,7 +452,7 @@ export default function OnboardingScreen() {
         {/* Travelers Step */}
         {step === 'travelers' && (
           <View>
-            <Card variant="elevated" padding="lg">
+            <Card variant="outlined" padding="lg">
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text style={{ color: COLORS.stone[700], fontWeight: '600', fontSize: 17 }}>
                   Number of travellers

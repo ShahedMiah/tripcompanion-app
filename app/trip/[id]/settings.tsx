@@ -58,7 +58,7 @@ export default function TripSettingsScreen() {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <View className="px-5 py-6">
           {/* Trip Info */}
-          <Card variant="elevated" padding="lg" className="mb-6">
+          <Card variant="outlined" padding="lg" className="mb-6">
             <View className="flex-row items-center">
               <View className="w-14 h-14 bg-primary-100 rounded-2xl items-center justify-center">
                 <Text className="text-2xl">
@@ -81,7 +81,7 @@ export default function TripSettingsScreen() {
           <Text className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3 px-1">
             Sharing
           </Text>
-          <Card variant="elevated" padding="md" className="mb-6">
+          <Card variant="outlined" padding="md" className="mb-6">
             <Text className="font-bold text-slate-900 mb-2">Share Link</Text>
             <Text className="text-slate-500 text-sm mb-4">
               Anyone with this link can view your trip itinerary
@@ -115,7 +115,7 @@ export default function TripSettingsScreen() {
           <Text className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3 px-1">
             Travellers ({trip.travelers.length})
           </Text>
-          <Card variant="elevated" padding="md" className="mb-6">
+          <Card variant="outlined" padding="md" className="mb-6">
             {trip.travelers.map((traveler, index) => (
               <View
                 key={traveler.id}
@@ -151,7 +151,7 @@ export default function TripSettingsScreen() {
           <Text className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3 px-1">
             Preferences
           </Text>
-          <Card variant="elevated" padding="none" className="mb-6">
+          <Card variant="outlined" padding="none" className="mb-6">
             <View className="flex-row items-center justify-between px-4 py-4 border-b border-slate-100">
               <View className="flex-row items-center flex-1">
                 <View className="w-10 h-10 bg-primary-100 rounded-xl items-center justify-center">
@@ -199,7 +199,7 @@ export default function TripSettingsScreen() {
           <Text className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3 px-1">
             Danger Zone
           </Text>
-          <Card variant="elevated" padding="md">
+          <Card variant="outlined" padding="md">
             <Pressable
               onPress={handleDeleteTrip}
               className="flex-row items-center py-2 active:opacity-80"

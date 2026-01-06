@@ -1,5 +1,22 @@
 import { View, Text, Image } from 'react-native';
 
+/**
+ * WAYFARE Avatar Component - Bento Editorial Design
+ *
+ * Displays user avatar with image or initials fallback.
+ * Warm terracotta-based colour palette for consistency.
+ */
+
+// Bento Editorial colour palette for avatars
+const AVATAR_COLORS = [
+  '#C4704A', // terracotta
+  '#4A7B5A', // forest
+  '#D4A574', // amber
+  '#8B5CF6', // violet
+  '#3B82F6', // blue
+  '#EC4899', // pink
+];
+
 interface AvatarProps {
   source?: string;
   name?: string;
@@ -7,12 +24,14 @@ interface AvatarProps {
 }
 
 export function Avatar({ source, name, size = 'md' }: AvatarProps) {
-  const sizeStyles = {
-    sm: { container: 'w-8 h-8', text: 'text-xs' },
-    md: { container: 'w-10 h-10', text: 'text-sm' },
-    lg: { container: 'w-12 h-12', text: 'text-base' },
-    xl: { container: 'w-16 h-16', text: 'text-xl' },
+  const sizeConfig = {
+    sm: { dimension: 32, fontSize: 12, borderRadius: 10 },
+    md: { dimension: 40, fontSize: 14, borderRadius: 12 },
+    lg: { dimension: 48, fontSize: 16, borderRadius: 14 },
+    xl: { dimension: 64, fontSize: 22, borderRadius: 20 },
   };
+
+  const config = sizeConfig[size];
 
   const getInitials = (name: string) => {
     return name
@@ -25,36 +44,39 @@ export function Avatar({ source, name, size = 'md' }: AvatarProps) {
 
   // Generate a consistent color based on name
   const getColor = (name: string) => {
-    const colors = [
-      'bg-primary-500',
-      'bg-coral-500',
-      'bg-sand-500',
-      'bg-violet-500',
-      'bg-cyan-500',
-      'bg-emerald-500',
-    ];
-    const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
+    const index = name.charCodeAt(0) % AVATAR_COLORS.length;
+    return AVATAR_COLORS[index];
   };
 
   if (source) {
     return (
       <Image
         source={{ uri: source }}
-        className={`${sizeStyles[size].container} rounded-full`}
+        style={{
+          width: config.dimension,
+          height: config.dimension,
+          borderRadius: config.borderRadius,
+        }}
       />
     );
   }
 
   return (
     <View
-      className={`
-        ${sizeStyles[size].container}
-        rounded-full ${getColor(name || '?')}
-        items-center justify-center
-      `}
+      style={{
+        width: config.dimension,
+        height: config.dimension,
+        borderRadius: config.borderRadius,
+        backgroundColor: getColor(name || '?'),
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
     >
-      <Text className={`${sizeStyles[size].text} font-bold text-white`}>
+      <Text style={{
+        fontSize: config.fontSize,
+        fontWeight: '700',
+        color: '#FFFFFF',
+      }}>
         {name ? getInitials(name) : '?'}
       </Text>
     </View>

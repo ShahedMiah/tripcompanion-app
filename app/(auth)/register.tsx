@@ -300,45 +300,47 @@ export default function RegisterScreen() {
               <View style={{ flex: 1, height: 1, backgroundColor: COLORS.stone[200] }} />
             </View>
 
-            {/* Social Registration */}
+            {/* Social Registration - Side by side square icons */}
             <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
               <Pressable
                 onPress={() => router.replace('/(tabs)')}
                 style={({ pressed }) => ({
-                  flex: 1,
+                  opacity: pressed ? 0.9 : 1,
+                  transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
+                })}
+              >
+                <View style={{
+                  width: 56,
                   height: 56,
                   backgroundColor: '#FFFFFF',
                   borderWidth: 1,
                   borderColor: COLORS.stone[200],
                   borderRadius: 16,
-                  flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  opacity: pressed ? 0.9 : 1,
-                })}
-              >
-                <Ionicons name="logo-google" size={22} color="#4285F4" />
-                <Text style={{ marginLeft: 10, color: COLORS.stone[700], fontWeight: '600', fontSize: 15 }}>
-                  Google
-                </Text>
+                }}>
+                  <Ionicons name="logo-google" size={24} color="#4285F4" />
+                </View>
               </Pressable>
               <Pressable
                 onPress={() => router.replace('/(tabs)')}
                 style={({ pressed }) => ({
-                  flex: 1,
-                  height: 56,
-                  backgroundColor: COLORS.ink[900],
-                  borderRadius: 16,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   opacity: pressed ? 0.9 : 1,
+                  transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
                 })}
               >
-                <Ionicons name="logo-apple" size={22} color="#FFFFFF" />
-                <Text style={{ marginLeft: 10, color: '#FFFFFF', fontWeight: '600', fontSize: 15 }}>
-                  Apple
-                </Text>
+                <View style={{
+                  width: 56,
+                  height: 56,
+                  backgroundColor: '#FFFFFF',
+                  borderWidth: 1,
+                  borderColor: COLORS.stone[200],
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Ionicons name="logo-apple" size={24} color="#000000" />
+                </View>
               </Pressable>
             </View>
           </View>

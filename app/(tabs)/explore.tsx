@@ -161,7 +161,7 @@ export default function ExploreScreen() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 24 }}
+            contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
           >
             {categories.map((category) => (
               <Pressable
@@ -169,8 +169,7 @@ export default function ExploreScreen() {
                 onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
                 style={({ pressed }) => ({
                   alignItems: 'center',
-                  width: 72,
-                  marginRight: 12,
+                  width: 64,
                   opacity: pressed ? 0.8 : 1,
                 })}
               >
@@ -210,21 +209,23 @@ export default function ExploreScreen() {
             </Pressable>
           </View>
 
-          {popularDestinations.map((destination) => (
-            <Pressable
+          {popularDestinations.map((destination, index) => (
+            <View
               key={destination.id}
-              onPress={() => handleDestinationPress(destination)}
-              style={({ pressed }) => ({
-                marginBottom: 16,
-                transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
-                opacity: pressed ? 0.9 : 1,
-              })}
+              style={{ marginBottom: index < popularDestinations.length - 1 ? 16 : 0 }}
             >
-              <Card variant="elevated" padding="none">
-                <View style={{ flexDirection: 'row' }}>
+              <Pressable
+                onPress={() => handleDestinationPress(destination)}
+                style={({ pressed }) => ({
+                  transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
+                  opacity: pressed ? 0.9 : 1,
+                })}
+              >
+                <Card variant="outlined" padding="none">
+                <View style={{ flexDirection: 'row', minHeight: 120 }}>
                   <Image
                     source={{ uri: destination.image }}
-                    style={{ width: 110, height: 110, borderTopLeftRadius: 24, borderBottomLeftRadius: 24 }}
+                    style={{ width: 110, borderTopLeftRadius: 24, borderBottomLeftRadius: 24 }}
                     resizeMode="cover"
                   />
                   <View style={{ flex: 1, padding: 16, justifyContent: 'center' }}>
@@ -237,7 +238,7 @@ export default function ExploreScreen() {
                     <Text style={{ color: COLORS.stone[500], fontSize: 13, marginBottom: 10 }} numberOfLines={1}>
                       {destination.description}
                     </Text>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                       {destination.tags.map((tag) => (
                         <View
                           key={tag}
@@ -246,8 +247,6 @@ export default function ExploreScreen() {
                             borderRadius: 8,
                             paddingHorizontal: 10,
                             paddingVertical: 4,
-                            marginRight: 6,
-                            marginBottom: 4,
                           }}
                         >
                           <Text style={{ color: COLORS.stone[700], fontSize: 11, fontWeight: '600' }}>
@@ -271,7 +270,8 @@ export default function ExploreScreen() {
                   </View>
                 </View>
               </Card>
-            </Pressable>
+              </Pressable>
+            </View>
           ))}
         </View>
 

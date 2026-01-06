@@ -1,6 +1,6 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { getTripById, getItineraryForTrip } from '@/lib/mock-data';
@@ -56,7 +56,6 @@ export default function ItineraryScreen() {
   const trip = getTripById(id);
   const itinerary = getItineraryForTrip(id);
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
-  const scrollRef = useRef<ScrollView>(null);
 
   if (!trip || itinerary.length === 0) {
     return (
@@ -80,54 +79,55 @@ export default function ItineraryScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
       {/* Day Selector */}
-      <View style={{ backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderBottomColor: COLORS.stone[200] }}>
+      <View style={{ backgroundColor: COLORS.cream, paddingVertical: 12 }}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16, gap: 12 }}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
         >
-          {itinerary.map((day, index) => (
-            <Pressable
-              key={day.id}
-              onPress={() => handleDaySelect(index)}
-              style={({ pressed }) => ({
-                paddingHorizontal: 16,
-                paddingVertical: 10,
-                borderRadius: 14,
-                minWidth: 72,
-                backgroundColor: selectedDayIndex === index ? COLORS.terracotta[500] : COLORS.stone[100],
-                opacity: pressed ? 0.8 : 1,
-              })}
-            >
-              <Text
+          {itinerary.map((day, index) => {
+            const isSelected = selectedDayIndex === index;
+            return (
+              <Pressable
+                key={day.id}
+                onPress={() => handleDaySelect(index)}
                 style={{
-                  fontSize: 11,
-                  fontWeight: '600',
-                  letterSpacing: 0.5,
-                  color: selectedDayIndex === index ? 'rgba(255,255,255,0.8)' : COLORS.stone[500],
-                  textTransform: 'uppercase',
+                  paddingHorizontal: 12,
+                  paddingVertical: 8,
+                  borderRadius: 12,
+                  marginRight: 10,
+                  backgroundColor: isSelected ? COLORS.terracotta[500] : 'transparent',
                 }}
               >
-                Day {day.dayNumber}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: '700',
-                  color: selectedDayIndex === index ? '#FFFFFF' : COLORS.ink[900],
-                  marginTop: 2,
-                }}
-              >
-                {format(day.date, 'EEE d')}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  style={{
+                    fontSize: 10,
+                    fontWeight: '600',
+                    letterSpacing: 0.5,
+                    color: isSelected ? 'rgba(255,255,255,0.8)' : COLORS.stone[400],
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Day {day.dayNumber}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '700',
+                    color: isSelected ? '#FFFFFF' : COLORS.ink[900],
+                    marginTop: 2,
+                  }}
+                >
+                  {format(day.date, 'EEE d')}
+                </Text>
+              </Pressable>
+            );
+          })}
         </ScrollView>
       </View>
 
       {/* Day Content */}
       <ScrollView
-        ref={scrollRef}
         style={{ flex: 1 }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 20 }}
@@ -153,7 +153,7 @@ export default function ItineraryScreen() {
         )}
 
         {/* Activities Timeline */}
-        <View style={{ marginTop: 8 }}>
+        <View style={{ marginTop: 8, width: '100%' }}>
           {selectedDay.activities
             .sort((a, b) => a.order - b.order)
             .map((activity, index) => (
@@ -176,16 +176,15 @@ export default function ItineraryScreen() {
             borderColor: COLORS.stone[300],
             borderRadius: 16,
             padding: 20,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
             backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
           })}
         >
-          <Ionicons name="add-circle-outline" size={24} color={COLORS.stone[500]} />
-          <Text style={{ color: COLORS.stone[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
-            Add Activity
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Ionicons name="add-circle-outline" size={22} color={COLORS.stone[500]} />
+            <Text style={{ color: COLORS.stone[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+              Add Activity
+            </Text>
+          </View>
         </Pressable>
       </ScrollView>
     </View>
@@ -198,7 +197,7 @@ function WeatherCard({ weather }: { weather: ItineraryDay['weather'] }) {
   const config = weatherConfig[weather.condition];
 
   return (
-    <Card variant="elevated" padding="md" style={{ marginBottom: 16 }}>
+    <Card variant="outlined" padding="md" style={{ marginBottom: 16 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
           style={{
@@ -263,7 +262,7 @@ function ActivityCard({
   return (
     <View style={{ flexDirection: 'row' }}>
       {/* Timeline */}
-      <View style={{ alignItems: 'center', marginRight: 16 }}>
+      <View style={{ alignItems: 'center', marginRight: 12, flexShrink: 0 }}>
         <View
           style={{
             width: 44,
@@ -280,14 +279,15 @@ function ActivityCard({
       </View>
 
       {/* Content */}
-      <Pressable
-        onPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          onPress();
-        }}
-        style={({ pressed }) => ({ flex: 1, marginBottom: 16, opacity: pressed ? 0.9 : 1 })}
-      >
-        <Card variant="elevated" padding="md">
+      <View style={{ flex: 1, marginBottom: 16 }}>
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            onPress();
+          }}
+          style={({ pressed }) => ({ opacity: pressed ? 0.9 : 1 })}
+        >
+          <Card variant="outlined" padding="md">
           {/* Time */}
           {activity.startTime && (
             <Text style={{ fontSize: 13, color: COLORS.stone[500], marginBottom: 6 }}>
@@ -301,11 +301,11 @@ function ActivityCard({
 
           {/* Title & Status */}
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.ink[900], flex: 1, marginRight: 8, letterSpacing: -0.2 }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: COLORS.ink[900], flex: 1, marginRight: 8, letterSpacing: -0.2 }} numberOfLines={2}>
               {activity.title}
             </Text>
-            <View style={{ backgroundColor: status.bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 }}>
-              <Text style={{ fontSize: 11, fontWeight: '600', color: status.text }}>
+            <View style={{ backgroundColor: status.bg, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, flexShrink: 0 }}>
+              <Text style={{ fontSize: 10, fontWeight: '600', color: status.text }}>
                 {status.label}
               </Text>
             </View>
@@ -340,6 +340,8 @@ function ActivityCard({
             paddingTop: 12,
             borderTopWidth: 1,
             borderTopColor: COLORS.stone[200],
+            flexWrap: 'wrap',
+            gap: 8,
           }}>
             {activity.estimatedCost && (
               <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 14 }}>
@@ -357,16 +359,17 @@ function ActivityCard({
             )}
 
             {activity.bookingReference && (
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 1 }}>
                 <Ionicons name="ticket-outline" size={14} color={COLORS.forest[500]} />
-                <Text style={{ color: COLORS.forest[500], fontSize: 13, fontWeight: '500', marginLeft: 4 }}>
+                <Text style={{ color: COLORS.forest[500], fontSize: 12, fontWeight: '500', marginLeft: 4 }} numberOfLines={1}>
                   {activity.bookingReference}
                 </Text>
               </View>
             )}
           </View>
         </Card>
-      </Pressable>
+        </Pressable>
+      </View>
     </View>
   );
 }

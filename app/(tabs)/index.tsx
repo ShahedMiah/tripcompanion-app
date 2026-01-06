@@ -248,15 +248,15 @@ function TripCard({ trip, isPast = false }: { trip: Trip; isPast?: boolean }) {
   const status = statusConfig[trip.status] || statusConfig.planning;
 
   return (
-    <Pressable
-      onPress={handlePress}
-      style={({ pressed }) => ({
-        marginBottom: 16,
-        opacity: isPast ? 0.8 : 1,
-        transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
-      })}
-    >
-      <Card variant="elevated" padding="none">
+    <View style={{ marginBottom: 16 }}>
+      <Pressable
+        onPress={handlePress}
+        style={({ pressed }) => ({
+          opacity: isPast ? 0.8 : 1,
+          transform: pressed ? [{ scale: 0.98 }] : [{ scale: 1 }],
+        })}
+      >
+        <Card variant="outlined" padding="none">
         {/* Cover Image */}
         <View style={{ height: 160, position: 'relative' }}>
           <Image
@@ -429,6 +429,7 @@ function TripCard({ trip, isPast = false }: { trip: Trip; isPast?: boolean }) {
           </View>
         </View>
       </Card>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 }

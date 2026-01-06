@@ -1,17 +1,15 @@
 import { Tabs } from 'expo-router';
-import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /**
  * WAYFARE Tab Layout - Bento Editorial Design
  *
  * Editorial tab bar with warm terracotta accents on cream background.
  * Subtle elevation and refined typography for premium feel.
+ *
+ * Note: Expo Router handles safe area insets automatically.
  */
 export default function TabLayout() {
-  const insets = useSafeAreaInsets();
-
   return (
     <Tabs
       screenOptions={{
@@ -23,28 +21,24 @@ export default function TabLayout() {
         tabBarStyle: {
           // Cream background for editorial warmth
           backgroundColor: '#FFFBF5',
-          borderTopWidth: 0,
-          // Subtle editorial shadow instead of border
+          // Subtle hairline border for clean separation
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(150, 139, 125, 0.15)',
+          // Soft shadow for depth
           shadowColor: '#1A1714',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.04,
-          shadowRadius: 8,
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.08,
+          shadowRadius: 12,
           elevation: 8,
-          paddingTop: 12,
-          height: 64 + insets.bottom,
-          paddingBottom: insets.bottom,
+          paddingTop: 8,
         },
         tabBarLabelStyle: {
           // Editorial overline typography
-          fontSize: 10,
+          fontSize: 9,
           fontWeight: '600',
-          letterSpacing: 0.8,
+          letterSpacing: 0.6,
           textTransform: 'uppercase',
           marginTop: 4,
-        },
-        // Active indicator styling
-        tabBarItemStyle: {
-          paddingVertical: 4,
         },
       }}
     >
@@ -53,19 +47,11 @@ export default function TabLayout() {
         options={{
           title: 'Journeys',
           tabBarIcon: ({ color, focused }) => (
-            <View
-              style={{
-                padding: 6,
-                borderRadius: 12,
-                backgroundColor: focused ? 'rgba(196, 112, 74, 0.1)' : 'transparent',
-              }}
-            >
-              <Ionicons
-                name={focused ? 'compass' : 'compass-outline'}
-                size={22}
-                color={color}
-              />
-            </View>
+            <Ionicons
+              name={focused ? 'compass' : 'compass-outline'}
+              size={22}
+              color={color}
+            />
           ),
         }}
       />
@@ -74,19 +60,11 @@ export default function TabLayout() {
         options={{
           title: 'Discover',
           tabBarIcon: ({ color, focused }) => (
-            <View
-              style={{
-                padding: 6,
-                borderRadius: 12,
-                backgroundColor: focused ? 'rgba(196, 112, 74, 0.1)' : 'transparent',
-              }}
-            >
-              <Ionicons
-                name={focused ? 'search' : 'search-outline'}
-                size={22}
-                color={color}
-              />
-            </View>
+            <Ionicons
+              name={focused ? 'search' : 'search-outline'}
+              size={22}
+              color={color}
+            />
           ),
         }}
       />
@@ -95,19 +73,11 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
-            <View
-              style={{
-                padding: 6,
-                borderRadius: 12,
-                backgroundColor: focused ? 'rgba(196, 112, 74, 0.1)' : 'transparent',
-              }}
-            >
-              <Ionicons
-                name={focused ? 'person' : 'person-outline'}
-                size={22}
-                color={color}
-              />
-            </View>
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              size={22}
+              color={color}
+            />
           ),
         }}
       />

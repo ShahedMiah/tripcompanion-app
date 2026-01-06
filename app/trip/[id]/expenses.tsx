@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getTripById, getExpensesForTrip, calculateBalances } from '@/lib/mock-data';
 import { Expense, ExpenseCategory } from '@/types';
 import { Card, Badge, Avatar, Button } from '@/components/ui';
@@ -53,6 +54,7 @@ const COLORS = {
 export default function ExpensesScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const trip = getTripById(id);
   const expenses = getExpensesForTrip(id);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -80,10 +82,13 @@ export default function ExpensesScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
-      <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ flex: 1 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Summary Card */}
         <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
-          <Card variant="elevated" padding="lg">
+          <Card variant="outlined" padding="lg">
             <Text style={{ color: COLORS.stone[500], fontSize: 13, fontWeight: '500' }}>Total Group Expenses</Text>
             <Text style={{ fontSize: 36, fontWeight: '700', color: COLORS.ink[900], marginTop: 4, letterSpacing: -1 }}>
               {formatCurrency(totalExpenses)}
@@ -125,17 +130,17 @@ export default function ExpensesScreen() {
                 marginTop: 16,
                 backgroundColor: COLORS.terracotta[50],
                 borderRadius: 14,
-                padding: 14,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
+                paddingVertical: 14,
+                paddingHorizontal: 16,
                 opacity: pressed ? 0.8 : 1,
               })}
             >
-              <Ionicons name="swap-horizontal" size={20} color={COLORS.terracotta[500]} />
-              <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
-                View Settlement Plan
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="swap-horizontal" size={18} color={COLORS.terracotta[500]} />
+                <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', marginLeft: 8, fontSize: 15 }}>
+                  View Settlement Plan
+                </Text>
+              </View>
             </Pressable>
           </Card>
         </View>
@@ -144,28 +149,64 @@ export default function ExpensesScreen() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={{ marginTop: 20 }}
-          contentContainerStyle={{ paddingHorizontal: 20, gap: 8 }}
+          style={{ marginTop: 24 }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 4 }}
         >
-          <FilterChip
-            label="All"
-            active={selectedFilter === 'all'}
-            onPress={() => setSelectedFilter('all')}
-          />
-          {Object.entries(expenseCategoryConfig).map(([key, config]) => (
-            <FilterChip
-              key={key}
-              label={config.label}
-              icon={config.icon}
-              iconColor={config.color}
-              active={selectedFilter === key}
-              onPress={() => setSelectedFilter(key as ExpenseCategory)}
-            />
-          ))}
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setSelectedFilter('all');
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+                borderRadius: 20,
+                marginRight: 10,
+                backgroundColor: selectedFilter === 'all' ? COLORS.terracotta[500] : '#FFFFFF',
+                borderWidth: 1,
+                borderColor: selectedFilter === 'all' ? COLORS.terracotta[500] : COLORS.stone[200],
+              }}
+            >
+              <Text style={{ fontWeight: '600', fontSize: 14, color: selectedFilter === 'all' ? 'white' : COLORS.ink[900] }}>
+                All
+              </Text>
+            </Pressable>
+            {Object.entries(expenseCategoryConfig).map(([key, config]) => (
+              <Pressable
+                key={key}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  setSelectedFilter(key as ExpenseCategory);
+                }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 14,
+                  paddingVertical: 10,
+                  borderRadius: 20,
+                  marginRight: 10,
+                  backgroundColor: selectedFilter === key ? COLORS.terracotta[500] : '#FFFFFF',
+                  borderWidth: 1,
+                  borderColor: selectedFilter === key ? COLORS.terracotta[500] : COLORS.stone[200],
+                }}
+              >
+                <Ionicons
+                  name={config.icon as any}
+                  size={16}
+                  color={selectedFilter === key ? 'white' : config.color}
+                  style={{ marginRight: 6 }}
+                />
+                <Text style={{ fontWeight: '600', fontSize: 14, color: selectedFilter === key ? 'white' : COLORS.ink[900] }}>
+                  {config.label}
+                </Text>
+              </Pressable>
+            ))}
         </ScrollView>
 
         {/* Expenses List */}
-        <View style={{ paddingHorizontal: 20, marginTop: 20, paddingBottom: 100 }}>
+        <View style={{ paddingHorizontal: 20, marginTop: 24, paddingBottom: 100 }}>
           {Object.entries(groupedExpenses)
             .sort(([a], [b]) => b.localeCompare(a))
             .map(([dateKey, dayExpenses]) => (
@@ -196,23 +237,23 @@ export default function ExpensesScreen() {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           setShowAddModal(true);
         }}
-        style={({ pressed }) => ({
+        style={{
           position: 'absolute',
-          bottom: 24,
-          right: 24,
+          bottom: Math.max(insets.bottom, 20) + 20,
+          right: 20,
           width: 56,
           height: 56,
           backgroundColor: COLORS.terracotta[500],
-          borderRadius: 18,
+          borderRadius: 28,
           alignItems: 'center',
           justifyContent: 'center',
-          shadowColor: COLORS.terracotta[500],
+          shadowColor: '#000',
           shadowOffset: { width: 0, height: 4 },
-          shadowOpacity: 0.3,
-          shadowRadius: 12,
+          shadowOpacity: 0.25,
+          shadowRadius: 8,
           elevation: 8,
-          transform: pressed ? [{ scale: 0.95 }] : [{ scale: 1 }],
-        })}
+          zIndex: 999,
+        }}
       >
         <Ionicons name="add" size={28} color="white" />
       </Pressable>
@@ -249,25 +290,31 @@ function FilterChip({
       style={({ pressed }) => ({
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: 16,
-        paddingVertical: 10,
-        borderRadius: 12,
-        marginRight: 8,
+        paddingVertical: 12,
+        borderRadius: 24,
+        marginRight: 10,
         backgroundColor: active ? COLORS.terracotta[500] : '#FFFFFF',
-        borderWidth: active ? 0 : 1,
-        borderColor: COLORS.stone[200],
+        borderWidth: 1.5,
+        borderColor: active ? COLORS.terracotta[500] : COLORS.stone[200],
         opacity: pressed ? 0.8 : 1,
+        shadowColor: active ? COLORS.terracotta[500] : '#000',
+        shadowOffset: { width: 0, height: active ? 2 : 1 },
+        shadowOpacity: active ? 0.25 : 0.05,
+        shadowRadius: active ? 4 : 2,
+        elevation: active ? 3 : 1,
       })}
     >
       {icon && (
         <Ionicons
           name={icon as any}
-          size={16}
+          size={18}
           color={active ? 'white' : iconColor}
-          style={{ marginRight: 6 }}
+          style={{ marginRight: 8 }}
         />
       )}
-      <Text style={{ fontWeight: '600', fontSize: 14, color: active ? 'white' : COLORS.stone[700] }}>
+      <Text style={{ fontWeight: '600', fontSize: 14, color: active ? 'white' : COLORS.ink[900] }}>
         {label}
       </Text>
     </Pressable>
@@ -278,7 +325,7 @@ function ExpenseCard({ expense }: { expense: Expense }) {
   const config = expenseCategoryConfig[expense.category];
 
   return (
-    <Card variant="elevated" style={{ marginBottom: 12 }} padding="md">
+    <Card variant="outlined" style={{ marginBottom: 12 }} padding="md">
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
           style={{
@@ -310,29 +357,27 @@ function ExpenseCard({ expense }: { expense: Expense }) {
 
       {/* Split Details */}
       <View style={{ marginTop: 14, paddingTop: 14, borderTopWidth: 1, borderTopColor: COLORS.stone[200] }}>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', rowGap: 8, columnGap: 16 }}>
           {expense.splitBetween.map((split) => (
             <View
               key={split.travelerId}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginRight: 16,
-                marginBottom: 4,
                 opacity: split.settled ? 0.5 : 1,
               }}
             >
               <View
                 style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 4,
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
                   marginRight: 6,
                   backgroundColor: split.settled ? COLORS.forest[500] : COLORS.amber[500],
                 }}
               />
               <Text style={{ fontSize: 13, color: COLORS.stone[700] }}>
-                {split.travelerName}: {formatCurrency(split.amount)}
+                {split.travelerName.split(' ')[0]}: {formatCurrency(split.amount)}
               </Text>
             </View>
           ))}
@@ -353,7 +398,7 @@ function AddExpenseModal({
 }) {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<ExpenseCategory>('other');
+  const [category, setCategory] = useState<ExpenseCategory>('food');
   const [paidBy, setPaidBy] = useState(travelers[0]?.id || '');
 
   const handleSave = () => {
@@ -361,12 +406,14 @@ function AddExpenseModal({
     onClose();
     setAmount('');
     setDescription('');
-    setCategory('other');
+    setCategory('food');
   };
+
+  const quickAmounts = ['10', '25', '50', '100'];
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.cream }}>
         {/* Header */}
         <View style={{
           flexDirection: 'row',
@@ -374,24 +421,36 @@ function AddExpenseModal({
           justifyContent: 'space-between',
           paddingHorizontal: 20,
           paddingVertical: 16,
+          backgroundColor: '#FFFFFF',
           borderBottomWidth: 1,
           borderBottomColor: COLORS.stone[200],
         }}>
-          <Pressable onPress={onClose}>
-            <Text style={{ color: COLORS.stone[500], fontWeight: '600', fontSize: 15 }}>Cancel</Text>
+          <Pressable onPress={onClose} hitSlop={8}>
+            <Text style={{ color: COLORS.stone[500], fontWeight: '600', fontSize: 16 }}>Cancel</Text>
           </Pressable>
           <Text style={{ fontSize: 17, fontWeight: '700', color: COLORS.ink[900] }}>Add Expense</Text>
-          <Pressable onPress={handleSave}>
-            <Text style={{ color: COLORS.terracotta[500], fontWeight: '600', fontSize: 15 }}>Save</Text>
+          <Pressable onPress={handleSave} hitSlop={8} disabled={!amount}>
+            <Text style={{ color: amount ? COLORS.terracotta[500] : COLORS.stone[300], fontWeight: '600', fontSize: 16 }}>Save</Text>
           </Pressable>
         </View>
 
-        <ScrollView style={{ flex: 1, paddingHorizontal: 20, paddingTop: 24 }}>
-          {/* Amount Input */}
-          <View style={{ alignItems: 'center', marginBottom: 32 }}>
-            <Text style={{ color: COLORS.stone[500], marginBottom: 8, fontSize: 14 }}>Amount</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ fontSize: 40, fontWeight: '300', color: COLORS.stone[300] }}>£</Text>
+        <ScrollView
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Amount Section */}
+          <View style={{
+            backgroundColor: '#FFFFFF',
+            marginHorizontal: 20,
+            marginTop: 20,
+            borderRadius: 20,
+            paddingVertical: 32,
+            paddingHorizontal: 20,
+            alignItems: 'center',
+          }}>
+            <View style={{ flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center' }}>
+              <Text style={{ fontSize: 36, fontWeight: '600', color: amount ? COLORS.ink[900] : COLORS.stone[300], marginRight: 4 }}>£</Text>
               <TextInput
                 value={amount}
                 onChangeText={setAmount}
@@ -399,181 +458,218 @@ function AddExpenseModal({
                 placeholderTextColor={COLORS.stone[300]}
                 keyboardType="decimal-pad"
                 style={{
-                  fontSize: 48,
+                  fontSize: 56,
                   fontWeight: '700',
                   color: COLORS.ink[900],
-                  marginLeft: 4,
-                  minWidth: 100,
+                  minWidth: 140,
+                  textAlign: 'center',
                 }}
               />
             </View>
-          </View>
 
-          {/* Quick Amount Buttons */}
-          <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 32 }}>
-            {['10', '25', '50', '100'].map((val) => (
-              <Pressable
-                key={val}
-                onPress={() => setAmount(val)}
-                style={({ pressed }) => ({
-                  paddingHorizontal: 20,
-                  paddingVertical: 10,
-                  backgroundColor: COLORS.stone[100],
-                  borderRadius: 12,
-                  marginHorizontal: 6,
-                  opacity: pressed ? 0.8 : 1,
-                })}
-              >
-                <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 15 }}>£{val}</Text>
-              </Pressable>
-            ))}
+            {/* Quick Amount Buttons */}
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+              {quickAmounts.map((val, index) => (
+                <Pressable
+                  key={val}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setAmount(val);
+                  }}
+                  style={{
+                    paddingHorizontal: 18,
+                    paddingVertical: 10,
+                    backgroundColor: amount === val ? COLORS.terracotta[500] : COLORS.stone[100],
+                    borderRadius: 20,
+                    marginLeft: index > 0 ? 10 : 0,
+                  }}
+                >
+                  <Text style={{ color: amount === val ? 'white' : COLORS.ink[900], fontWeight: '600', fontSize: 15 }}>£{val}</Text>
+                </Pressable>
+              ))}
+            </View>
           </View>
 
           {/* Description */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 8, letterSpacing: 0.2 }}>
+          <View style={{ marginHorizontal: 20, marginTop: 12 }}>
+            <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.stone[500], marginBottom: 8, letterSpacing: 0.5, textTransform: 'uppercase' }}>
               Description
             </Text>
-            <View style={{ backgroundColor: COLORS.stone[100], borderRadius: 14, paddingHorizontal: 16, paddingVertical: 14 }}>
+            <View style={{ backgroundColor: '#FFFFFF', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12 }}>
               <TextInput
                 value={description}
                 onChangeText={setDescription}
                 placeholder="What was this for?"
-                placeholderTextColor={COLORS.stone[500]}
-                style={{ color: COLORS.ink[900], fontSize: 16 }}
+                placeholderTextColor={COLORS.stone[300]}
+                style={{ color: COLORS.ink[900], fontSize: 15 }}
               />
             </View>
           </View>
 
           {/* Category */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 12, letterSpacing: 0.2 }}>
+          <View style={{ marginTop: 16, marginHorizontal: 20 }}>
+            <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.stone[500], marginBottom: 10, letterSpacing: 0.5, textTransform: 'uppercase' }}>
               Category
             </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {Object.entries(expenseCategoryConfig).map(([key, config]) => (
-                <Pressable
-                  key={key}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setCategory(key as ExpenseCategory);
-                  }}
-                  style={({ pressed }) => ({
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingHorizontal: 14,
-                    paddingVertical: 10,
-                    borderRadius: 12,
-                    marginRight: 8,
-                    marginBottom: 8,
-                    backgroundColor: category === key ? COLORS.terracotta[500] : COLORS.stone[100],
-                    opacity: pressed ? 0.8 : 1,
-                  })}
-                >
-                  <Ionicons
-                    name={config.icon as any}
-                    size={16}
-                    color={category === key ? 'white' : config.color}
-                  />
-                  <Text
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {Object.entries(expenseCategoryConfig).map(([key, config]) => {
+                const isSelected = category === key;
+                return (
+                  <Pressable
+                    key={key}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setCategory(key as ExpenseCategory);
+                    }}
                     style={{
-                      marginLeft: 8,
-                      fontWeight: '600',
-                      fontSize: 14,
-                      color: category === key ? 'white' : COLORS.ink[900],
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      borderRadius: 16,
+                      backgroundColor: isSelected ? COLORS.terracotta[500] : '#FFFFFF',
+                      borderWidth: 1,
+                      borderColor: isSelected ? COLORS.terracotta[500] : COLORS.stone[200],
                     }}
                   >
-                    {config.label}
-                  </Text>
-                </Pressable>
-              ))}
+                    <Ionicons
+                      name={config.icon as any}
+                      size={16}
+                      color={isSelected ? 'white' : config.color}
+                    />
+                    <Text
+                      style={{
+                        marginLeft: 6,
+                        fontWeight: '600',
+                        fontSize: 13,
+                        color: isSelected ? 'white' : COLORS.ink[900],
+                      }}
+                    >
+                      {config.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
           </View>
 
           {/* Paid By */}
-          <View style={{ marginBottom: 24 }}>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: COLORS.ink[900], marginBottom: 12, letterSpacing: 0.2 }}>
+          <View style={{ marginTop: 16 }}>
+            <Text style={{ fontSize: 11, fontWeight: '600', color: COLORS.stone[500], marginBottom: 10, marginHorizontal: 20, letterSpacing: 0.5, textTransform: 'uppercase' }}>
               Paid by
             </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {travelers.map((traveler) => (
-                <Pressable
-                  key={traveler.id}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setPaidBy(traveler.id);
-                  }}
-                  style={({ pressed }) => ({
-                    alignItems: 'center',
-                    marginRight: 16,
-                    padding: 12,
-                    borderRadius: 16,
-                    backgroundColor: paidBy === traveler.id ? COLORS.terracotta[50] : 'transparent',
-                    opacity: pressed ? 0.8 : 1,
-                  })}
-                >
-                  <View
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+            >
+              {travelers.map((traveler, index) => {
+                const isSelected = paidBy === traveler.id;
+                return (
+                  <Pressable
+                    key={traveler.id}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setPaidBy(traveler.id);
+                    }}
                     style={{
-                      borderRadius: 28,
-                      padding: 2,
-                      borderWidth: paidBy === traveler.id ? 2 : 0,
-                      borderColor: COLORS.terracotta[500],
+                      alignItems: 'center',
+                      marginRight: index < travelers.length - 1 ? 2 : 0,
+                      paddingVertical: 4,
+                      paddingHorizontal: 6,
                     }}
                   >
-                    <Avatar
-                      source={traveler.avatarUrl}
-                      name={traveler.name}
-                      size="lg"
-                    />
-                  </View>
-                  <Text
-                    style={{
-                      marginTop: 8,
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: paidBy === traveler.id ? COLORS.terracotta[500] : COLORS.stone[700],
-                    }}
-                  >
-                    {traveler.name.split(' ')[0]}
-                  </Text>
-                </Pressable>
-              ))}
+                    <View
+                      style={{
+                        borderRadius: 14,
+                        padding: 2,
+                        borderWidth: isSelected ? 2 : 0,
+                        borderColor: COLORS.terracotta[500],
+                      }}
+                    >
+                      <Avatar
+                        source={traveler.avatarUrl}
+                        name={traveler.name}
+                        size="md"
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        marginTop: 4,
+                        fontSize: 11,
+                        fontWeight: isSelected ? '600' : '500',
+                        color: isSelected ? COLORS.terracotta[500] : COLORS.stone[600],
+                      }}
+                    >
+                      {traveler.name.split(' ')[0]}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </ScrollView>
           </View>
 
           {/* Receipt */}
           <Pressable
             onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-            style={({ pressed }) => ({
-              marginBottom: 32,
-              borderWidth: 2,
-              borderStyle: 'dashed',
-              borderColor: COLORS.stone[300],
-              borderRadius: 16,
-              padding: 24,
+            style={{
+              marginHorizontal: 20,
+              marginTop: 16,
+              marginBottom: 20,
+              flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
-            })}
+              padding: 16,
+              borderRadius: 16,
+              backgroundColor: '#FFFFFF',
+              borderWidth: 1,
+              borderColor: COLORS.stone[200],
+            }}
           >
-            <Ionicons name="camera" size={32} color={COLORS.stone[500]} />
-            <Text style={{ color: COLORS.stone[700], fontWeight: '600', marginTop: 8, fontSize: 15 }}>
-              Add Receipt Photo
-            </Text>
-            <Text style={{ color: COLORS.stone[500], fontSize: 13, marginTop: 4 }}>
-              Tap to scan or upload
-            </Text>
+            <View style={{
+              width: 44,
+              height: 44,
+              borderRadius: 12,
+              backgroundColor: COLORS.stone[100],
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Ionicons name="camera-outline" size={22} color={COLORS.stone[500]} />
+            </View>
+            <View style={{ marginLeft: 14, flex: 1 }}>
+              <Text style={{ color: COLORS.ink[900], fontWeight: '600', fontSize: 15 }}>
+                Add Receipt Photo
+              </Text>
+              <Text style={{ color: COLORS.stone[500], fontSize: 13, marginTop: 2 }}>
+                Tap to scan or upload
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={COLORS.stone[400]} />
           </Pressable>
         </ScrollView>
 
-        <View style={{ paddingHorizontal: 20, paddingVertical: 16, borderTopWidth: 1, borderTopColor: COLORS.stone[200] }}>
-          <Button
-            title="Add Expense"
+        {/* Bottom Button */}
+        <View style={{
+          paddingHorizontal: 20,
+          paddingTop: 16,
+          paddingBottom: 24,
+          backgroundColor: '#FFFFFF',
+          borderTopWidth: 1,
+          borderTopColor: COLORS.stone[200]
+        }}>
+          <Pressable
             onPress={handleSave}
-            variant="primary"
-            size="lg"
-            fullWidth
             disabled={!amount}
-          />
+            style={{
+              backgroundColor: amount ? COLORS.terracotta[500] : COLORS.stone[200],
+              borderRadius: 16,
+              paddingVertical: 16,
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: amount ? 'white' : COLORS.stone[500], fontWeight: '700', fontSize: 16 }}>
+              Add Expense
+            </Text>
+          </Pressable>
         </View>
       </View>
     </Modal>

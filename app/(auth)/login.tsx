@@ -1,4 +1,9 @@
-import { View, Text, Pressable, KeyboardAvoidingView, Platform, ScrollView, TextInput } from 'react-native';
+import { View, Text, Pressable, KeyboardAvoidingView, Platform, ScrollView, TextInput, Dimensions } from 'react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const PADDING = 24;
+const GAP = 12;
+const BUTTON_WIDTH = (SCREEN_WIDTH - (PADDING * 2) - GAP) / 2;
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -99,7 +104,7 @@ export default function LoginScreen() {
             </Pressable>
           </View>
 
-          <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 32 }}>
+          <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 32, overflow: 'visible' }}>
             {/* Title */}
             <View style={{ marginBottom: 40 }}>
               <Text style={{
@@ -247,45 +252,47 @@ export default function LoginScreen() {
               <View style={{ flex: 1, height: 1, backgroundColor: COLORS.stone[200] }} />
             </View>
 
-            {/* Social Login */}
+            {/* Social Login - Side by side square icons */}
             <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
               <Pressable
                 onPress={() => router.replace('/(tabs)')}
                 style={({ pressed }) => ({
-                  flex: 1,
+                  opacity: pressed ? 0.9 : 1,
+                  transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
+                })}
+              >
+                <View style={{
+                  width: 56,
                   height: 56,
                   backgroundColor: '#FFFFFF',
                   borderWidth: 1,
                   borderColor: COLORS.stone[200],
                   borderRadius: 16,
-                  flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  opacity: pressed ? 0.9 : 1,
-                })}
-              >
-                <Ionicons name="logo-google" size={22} color="#4285F4" />
-                <Text style={{ marginLeft: 10, color: COLORS.stone[700], fontWeight: '600', fontSize: 15 }}>
-                  Google
-                </Text>
+                }}>
+                  <Ionicons name="logo-google" size={24} color="#4285F4" />
+                </View>
               </Pressable>
               <Pressable
                 onPress={() => router.replace('/(tabs)')}
                 style={({ pressed }) => ({
-                  flex: 1,
-                  height: 56,
-                  backgroundColor: COLORS.ink[900],
-                  borderRadius: 16,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   opacity: pressed ? 0.9 : 1,
+                  transform: pressed ? [{ scale: 0.96 }] : [{ scale: 1 }],
                 })}
               >
-                <Ionicons name="logo-apple" size={22} color="#FFFFFF" />
-                <Text style={{ marginLeft: 10, color: '#FFFFFF', fontWeight: '600', fontSize: 15 }}>
-                  Apple
-                </Text>
+                <View style={{
+                  width: 56,
+                  height: 56,
+                  backgroundColor: '#FFFFFF',
+                  borderWidth: 1,
+                  borderColor: COLORS.stone[200],
+                  borderRadius: 16,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Ionicons name="logo-apple" size={24} color="#000000" />
+                </View>
               </Pressable>
             </View>
           </View>

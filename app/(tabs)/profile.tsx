@@ -153,7 +153,7 @@ export default function ProfileScreen() {
 
         {/* Stats */}
         <View style={{ paddingHorizontal: 20, marginBottom: 24 }}>
-          <Card variant="elevated" padding="md">
+          <Card variant="outlined" padding="md">
             <View style={{ flexDirection: 'row' }}>
               {stats.map((stat, index) => (
                 <View
@@ -236,7 +236,7 @@ export default function ProfileScreen() {
           }}>
             Settings
           </Text>
-          <Card variant="elevated" padding="none">
+          <Card variant="outlined" padding="none">
             {/* Notifications Toggle */}
             <View style={{
               flexDirection: 'row',
@@ -320,39 +320,47 @@ export default function ProfileScreen() {
           }}>
             Menu
           </Text>
-          <Card variant="elevated" padding="none">
+          <Card variant="outlined" padding="none">
             {menuItems.map((item, index) => (
-              <Pressable
+              <View
                 key={item.id}
-                onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-                style={({ pressed }) => ({
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingHorizontal: 16,
-                  paddingVertical: 16,
-                  backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
+                style={{
                   borderBottomWidth: index < menuItems.length - 1 ? 1 : 0,
                   borderBottomColor: COLORS.stone[200],
-                })}
+                }}
               >
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 12,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: 14,
-                    backgroundColor: `${item.color}15`,
-                  }}
+                <Pressable
+                  onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+                  style={({ pressed }) => ({
+                    backgroundColor: pressed ? COLORS.stone[100] : 'transparent',
+                  })}
                 >
-                  <Ionicons name={item.icon as any} size={20} color={item.color} />
-                </View>
-                <Text style={{ flex: 1, color: COLORS.ink[900], fontWeight: '500', fontSize: 15 }}>
-                  {item.title}
-                </Text>
-                <Ionicons name="chevron-forward" size={18} color={COLORS.stone[500]} />
-              </Pressable>
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 16,
+                    paddingVertical: 16,
+                  }}>
+                    <View
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 14,
+                        backgroundColor: `${item.color}15`,
+                      }}
+                    >
+                      <Ionicons name={item.icon as any} size={20} color={item.color} />
+                    </View>
+                    <Text style={{ flex: 1, color: COLORS.ink[900], fontWeight: '500', fontSize: 15 }}>
+                      {item.title}
+                    </Text>
+                    <Ionicons name="chevron-forward" size={18} color={COLORS.stone[500]} />
+                  </View>
+                </Pressable>
+              </View>
             ))}
           </Card>
         </View>
@@ -364,15 +372,18 @@ export default function ProfileScreen() {
             style={({ pressed }) => ({
               backgroundColor: '#FEF2F2',
               borderRadius: 16,
-              paddingVertical: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
               opacity: pressed ? 0.8 : 1,
             })}
           >
-            <Ionicons name="log-out-outline" size={20} color="#DC2626" />
-            <Text style={{ color: '#DC2626', fontWeight: '600', marginLeft: 8, fontSize: 15 }}>Sign Out</Text>
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingVertical: 16,
+            }}>
+              <Ionicons name="log-out-outline" size={20} color="#DC2626" />
+              <Text style={{ color: '#DC2626', fontWeight: '600', marginLeft: 8, fontSize: 15 }}>Sign Out</Text>
+            </View>
           </Pressable>
 
           <Text style={{ textAlign: 'center', color: COLORS.stone[500], fontSize: 13, marginTop: 24 }}>

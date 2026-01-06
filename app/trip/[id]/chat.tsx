@@ -110,7 +110,7 @@ export default function ChatScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1, backgroundColor: COLORS.cream }}
-      keyboardVerticalOffset={180}
+      keyboardVerticalOffset={90}
     >
       {/* Messages */}
       <ScrollView
@@ -174,51 +174,45 @@ export default function ChatScreen() {
         backgroundColor: '#FFFFFF',
         borderTopWidth: 1,
         borderTopColor: COLORS.stone[200],
-        paddingHorizontal: 20,
-        paddingVertical: 12,
+        paddingHorizontal: 16,
+        paddingTop: 10,
+        paddingBottom: 12,
       }}>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-          <View style={{
-            flex: 1,
-            backgroundColor: COLORS.stone[100],
-            borderRadius: 20,
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-            marginRight: 10,
-            minHeight: 48,
-            maxHeight: 120,
-          }}>
-            <TextInput
-              value={inputText}
-              onChangeText={setInputText}
-              placeholder="Ask about your trip..."
-              placeholderTextColor={COLORS.stone[500]}
-              multiline
-              style={{
-                color: COLORS.ink[900],
-                fontSize: 16,
-                lineHeight: 22,
-                maxHeight: 100,
-              }}
-            />
-          </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TextInput
+            value={inputText}
+            onChangeText={setInputText}
+            placeholder="Ask about your trip..."
+            placeholderTextColor={COLORS.stone[500]}
+            multiline
+            style={{
+              flex: 1,
+              backgroundColor: COLORS.stone[100],
+              borderRadius: 24,
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              marginRight: 12,
+              color: COLORS.ink[900],
+              fontSize: 16,
+              lineHeight: 22,
+              maxHeight: 100,
+              minHeight: 44,
+            }}
+          />
           <Pressable
             onPress={handleSend}
             disabled={!inputText.trim()}
-            style={({ pressed }) => ({
-              width: 48,
-              height: 48,
-              borderRadius: 24,
+            style={{
+              width: 44,
+              height: 44,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: inputText.trim() ? COLORS.terracotta[500] : COLORS.stone[200],
-              opacity: pressed && inputText.trim() ? 0.8 : 1,
-            })}
+            }}
           >
             <Ionicons
               name="send"
-              size={20}
-              color={inputText.trim() ? 'white' : COLORS.stone[500]}
+              size={24}
+              color={inputText.trim() ? COLORS.terracotta[500] : COLORS.stone[300]}
             />
           </Pressable>
         </View>
@@ -235,7 +229,7 @@ function WelcomeCard({
   destination: string;
 }) {
   return (
-    <Card variant="elevated" padding="lg" style={{ marginBottom: 16 }}>
+    <Card variant="outlined" padding="lg" style={{ marginBottom: 16 }}>
       <View style={{ alignItems: 'center' }}>
         <View style={{
           width: 64,
