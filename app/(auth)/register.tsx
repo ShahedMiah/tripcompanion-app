@@ -271,30 +271,23 @@ export default function RegisterScreen() {
             </View>
 
             {/* Register Button */}
-            <View style={{ marginTop: 24 }}>
-              <Pressable
-                onPress={handleRegister}
-                disabled={loading}
-                style={({ pressed }) => ({
-                  backgroundColor: COLORS.forest[700],
-                  borderRadius: 16,
-                  paddingVertical: 18,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  shadowColor: '#1A1714',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.15,
-                  shadowRadius: 12,
-                  elevation: 6,
-                  opacity: loading ? 0.7 : pressed ? 0.9 : 1,
-                  transform: pressed && !loading ? [{ scale: 0.98 }] : [{ scale: 1 }],
-                })}
-              >
-                <Text style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '600' }}>
-                  {loading ? 'Creating account...' : 'Create Account'}
-                </Text>
-              </Pressable>
-            </View>
+            <Pressable
+              onPress={handleRegister}
+              disabled={loading}
+              style={{
+                marginTop: 24,
+                backgroundColor: '#2D4739',
+                borderRadius: 16,
+                paddingVertical: 18,
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity: loading ? 0.7 : 1,
+              }}
+            >
+              <Text style={{ color: '#FFFFFF', fontSize: 17, fontWeight: '600' }}>
+                {loading ? 'Creating account...' : 'Create Account'}
+              </Text>
+            </Pressable>
 
             {/* Divider */}
             <View style={{
